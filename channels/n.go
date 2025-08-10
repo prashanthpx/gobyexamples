@@ -26,3 +26,16 @@ func run(ch chan int) {
 	close(ch)
 	fmt.Println(" channel closed")
 }
+
+/*
+Output (timing-dependent)
+ default case
+ exit main
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate non-blocking select with default when no channel case is ready
+- run sleeps 2s then closes ch; the select runs first and chooses default
+- If the sleep is removed, selection between cases becomes race/timing-dependent
+*/

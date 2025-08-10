@@ -43,3 +43,20 @@ func main() {
 	fmt.Println(e.MonthlySalary[1])
 	fmt.Println(e.MonthlySalary[2])
 }
+
+/*
+Output
+Mark Jones
+25
+mark@gmail.com
+{15000 5000 2000}
+{16000 5000 2100}
+{17000 5000 2200}
+*/
+
+/*
+Code Explanation:
+- Purpose: Nested slice of structs inside another struct
+- Employee contains a slice of Salary structs; initialized with three entries
+- Printing fields and individual slice elements shows nested data
+*/

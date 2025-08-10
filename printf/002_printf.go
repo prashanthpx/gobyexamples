@@ -36,3 +36,16 @@ func main() {
 	orgStderr = oldStderr
 	fmt.Printf(" back to org ")
 }
+
+/*
+Output
+
+ out [in Test Print Yaml]   back to org
+*/
+
+/*
+Code Explanation:
+- Purpose: Capture formatted output in a buffer, then restore original writers
+- Reassign orgStdout/orgStderr to bytes.Buffer, write to it, split string, then restore
+- Demonstrates swapping out writers for testing or redirection
+*/

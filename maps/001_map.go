@@ -18,3 +18,18 @@ func main() {
 	// printing map contents
 	fmt.Println(age)
 }
+
+/*
+Output
+map is nil....
+map[]
+map[krish:30 kumar:25 prashanth:39]
+*/
+
+/*
+Code Explanation:
+- Purpose: Show zero value of a map, initialization with make, and insertion
+- var age map[string]int declares a nil map; nil check succeeds
+- age = make(map[string]int) allocates an empty map
+- Inserting keys updates the map; printing shows key-value pairs (unordered)
+*/

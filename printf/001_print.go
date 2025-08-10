@@ -17,3 +17,16 @@ func main() {
 	fmt.Println(n, "bytes written.")
 
 }
+
+/*
+Output
+Kim is 22 years old.
+21 bytes written.
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate fmt.Fprintln to an io.Writer and checking returned n, err
+- Writes to os.Stdout, then prints the number of bytes written
+- On error, logs to os.Stderr via fmt.Fprintf
+*/

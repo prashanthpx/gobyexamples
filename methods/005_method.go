@@ -18,3 +18,15 @@ func main() {
 	u := &User{"Prashanth", "Kumar"}
 	u.display()
 }
+
+/*
+Output
+ user name: Prashanth Kumar
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate pointer receiver methods mutating or accessing via pointer
+- User has FirstName/LastName; display uses a *User receiver
+- main constructs a *User and calls the method
+*/

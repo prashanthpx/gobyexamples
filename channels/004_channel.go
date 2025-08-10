@@ -12,3 +12,14 @@ func main() {
 	// Enabling the below statement makes the current context block
 	//chBuf <- 3
 }
+
+/*
+Output
+
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate buffered channel send without receiver
+- chBuf has capacity 2; two sends succeed without blocking; a third would block
+*/

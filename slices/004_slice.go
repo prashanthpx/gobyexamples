@@ -25,3 +25,22 @@ func main() {
 	// array content is changed
 	fmt.Println(" s no: ", s)
 }
+
+/*
+Output
+Original Slice
+s = [10 20 30 40 50 60 70 80 90 100], len = 10, cap = 10
+orig s1:  [20 30 40 50]
+mod s1:  [101 30 40 50]
+orig s2:  [40 50]
+mod s2:  [999 50]
+ s no:  [10 101 30 999 50 60 70 80 90 100]
+*/
+
+/*
+Code Explanation:
+- Purpose: Show how slices reference the same backing array and propagate changes
+- s1 := s[1:5] shares backing array with s; modifying s1 affects s
+- s2 := s1[2:4] slices from s1; still references same underlying array
+- Changes via s1/s2 reflect in s due to shared backing storage
+*/

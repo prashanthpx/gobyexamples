@@ -22,3 +22,17 @@ func main() {
 	(*rect3).color = "Blue"
 	fmt.Println(rect3) // length skipped
 }
+
+/*
+Output
+&{10 20 Green}
+&{10 0 Red}
+&{0 10 Blue}
+*/
+
+/*
+Code Explanation:
+- Purpose: Different ways to initialize pointers to structs
+- &rect{...} uses a composite literal; &rect{} then assign fields; (*rect3).field uses explicit deref
+- Shows missing fields get zero values
+*/

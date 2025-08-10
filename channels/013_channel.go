@@ -1,9 +1,9 @@
 package main
 
 import (
-	"time"
-	"math/rand"
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 func longTimeRequest() <-chan int32 {
@@ -28,3 +28,15 @@ func main() {
 	a, b := longTimeRequest(), longTimeRequest()
 	fmt.Println(sumSquares(<-a, <-b))
 }
+
+/*
+Output (random-dependent; ~3s delay)
+ line 11 line 11<some_number>
+*/
+
+/*
+Code Explanation:
+- Purpose: Run two concurrent requests returning random ints and combine results
+- longTimeRequest sleeps 3s then sends a random int; main reads both and sums squares
+- print shows the indicator from each goroutine then the final value
+*/

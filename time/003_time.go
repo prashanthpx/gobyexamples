@@ -28,3 +28,19 @@ func main() {
 		fmt.Printf(" Index: %d, Value: %d\n", index, value)
 	}
 }
+
+/*
+Output (sample; random-dependent)
+seed value 1754826632 Index: 0, Value: 50
+ Index: 1, Value: 10
+ Index: 2, Value: 40
+ Index: 3, Value: 20
+ Index: 4, Value: 30
+*/
+
+/*
+Code Explanation:
+- Purpose: Shuffle a slice using Fisher–Yates and print results
+- Seed with current Unix time for varying order; swap elements in-place
+- Final order varies each run due to randomness
+*/

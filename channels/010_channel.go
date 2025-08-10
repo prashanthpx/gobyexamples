@@ -11,7 +11,7 @@ func main() {
 		time.Sleep(time.Second)
 		// <-ch    // fails to compile
 		// Send the value and block until the result is received.
-		ch <- x*x // 9 is sent
+		ch <- x * x // 9 is sent
 	}(c, 3)
 	done := make(chan struct{})
 	go func(ch <-chan int) {
@@ -27,3 +27,16 @@ func main() {
 	<-done
 	fmt.Println("bye")
 }
+
+/*
+Output
+9
+bye
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate unbuffered channel with directional parameters and synchronization
+- Producer sends x*x after 1s; consumer receives, prints, then signals done
+- Main waits on done channel and prints bye
+*/

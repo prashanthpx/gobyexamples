@@ -32,3 +32,23 @@ func main() {
 	}
 
 }
+
+/*
+Output (timing-dependent)
+line 22line 22line 22line 9 entering workerworker 3 processing job 1
+line 9 entering workerworker 1 processing job 2
+line 9 entering workerworker 2 processing job 3
+ entering worker entering workerworker 1 processing job 6
+worker 2 processing job 4
+ entering workerworker 3 processing job 5
+ entering workerworker 3 processing job 7
+ entering workerworker 1 processing job 8
+ entering workerworker 2 processing job 9
+*/
+
+/*
+Code Explanation:
+- Purpose: Worker pool pattern with buffered job/result channels
+- Launch 3 workers reading from jobs and writing to results; main enqueues 9 jobs and drains results
+- Print interleaving varies with scheduling; Sleep simulates work
+*/

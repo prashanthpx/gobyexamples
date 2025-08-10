@@ -1,4 +1,5 @@
 package main
+
 import "fmt"
 
 func main() {
@@ -18,3 +19,17 @@ func print(para ...int) {
 	// modiyfing the slice
 	para[0] = 100
 }
+
+/*
+Output
+ Inside func print
+[10 20 30]
+[100 20 30]
+*/
+
+/*
+Code Explanation:
+- Purpose: Passing a slice into a variadic function uses the same backing array
+- para shares the backing array with slice, so modifying para[0] updates caller’s slice
+- Demonstrates that variadic parameter behaves like a slice
+*/

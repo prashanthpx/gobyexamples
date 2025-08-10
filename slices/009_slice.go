@@ -1,10 +1,11 @@
 package main
+
 import "fmt"
 
 func main() {
 	slice := make([]int, 5, 5)
 	//populating data
-	for i:=0; i<5; i++ {
+	for i := 0; i < 5; i++ {
 		slice[i] = i
 	}
 
@@ -14,13 +15,27 @@ func main() {
 	copy(newSlice, slice)
 	fmt.Println(newSlice)
 	/*
-	The copy function is smart. It only copies what it can, paying attention to the lengths of both arguments. 
-	In other words, the number of elements it copies is the minimum of the lengths of the two slices. 
-	This can save a little bookkeeping. 
-	Also, copy returns an integer value, the number of elements it copied, although it's not always worth checking.
+		The copy function is smart. It only copies what it can, paying attention to the lengths of both arguments.
+		In other words, the number of elements it copies is the minimum of the lengths of the two slices.
+		This can save a little bookkeeping.
+		Also, copy returns an integer value, the number of elements it copied, although it's not always worth checking.
 	*/
 
 	smallSlice := make([]int, 3, 5)
 	copy(smallSlice, slice)
 	fmt.Println(smallSlice)
 }
+
+/*
+Output
+[0 1 2 3 4]
+[0 1 2 3 4]
+[0 1 2]
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate copy between slices and effect of differing lengths
+- copy copies min(len(dst), len(src)) elements
+- Shows full copy to equal-length slice and truncation when destination is shorter
+*/

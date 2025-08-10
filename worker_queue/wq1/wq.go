@@ -19,6 +19,7 @@ type Worker struct {
 	readyPool chan Job
 	terminate chan bool
 }
+
 // JobQueue - a queue for enqueueing jobs to be processed
 type JobQueue struct {
 	inputQueue       chan Job
@@ -142,7 +143,7 @@ func main() {
 	queue.Start()
 	fmt.Println(" line 142")
 	defer queue.Stop()
-	
+
 	// for i := 0; i < 4*runtime.NumCPU()*2; i++ {
 	for i := 0; i < 20; i++ {
 		fmt.Printf("Submitting job %d\n", i)
@@ -150,3 +151,29 @@ func main() {
 	}
 	fmt.Println(" Completed Q submissions")
 }
+
+/*
+Output (truncated; long-running jobs)
+runtime.NumCPU(): 10
+ line 56
+ line 56
+ line 56
+ line 142
+Submitting job 0
+line 75 Passed to readyPool: &{0}
+Processing job '0'
+Submitting job 1
+Submitting job 2
+line 75 Passed to readyPool: &{1}
+line 75 Passed to readyPool: &{2}
+Processing job '2'
+...
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate a robust worker queue using a channel-based ready pool and worker goroutines
+- JobQueue has inputQueue and readyPool; scheduler forwards submissions to readyPool
+- Workers pull from readyPool and run jobs; Stop signals termination and waits for workers
+- TestJob Run sleeps 1 minute, so the program runs long; output truncated
+*/

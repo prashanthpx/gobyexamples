@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-var counter = func (n int) chan<- chan<- int {
+var counter = func(n int) chan<- chan<- int {
 	requests := make(chan chan<- int)
 	go func() {
 		for request := range requests {
@@ -31,9 +31,25 @@ func main() {
 	done := make(chan struct{})
 	go increase1000(done)
 	go increase1000(done)
-	<-done; <-done
+	<-done
+	<-done
 
 	request := make(chan int, 1)
 	counter <- request
 	fmt.Println(<-request) // 2000
 }
+
+/*
+Output
+ line 10
+... repeated ...
+ line 13
+20
+*/
+
+/*
+Code Explanation:
+- Purpose: Use a request channel-of-channels as a serialized counter
+- Sending nil signals an increment; sending a response channel requests the current value
+- The single goroutine serializes updates, avoiding races without a mutex
+*/

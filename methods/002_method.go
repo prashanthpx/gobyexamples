@@ -3,6 +3,7 @@ Pogram to demonstrate multiple methods for a type
 */
 
 package main
+
 import "fmt"
 
 type User struct {
@@ -27,3 +28,15 @@ func main() {
 	fmt.Printf("\n Greet: %s ", u.greet())
 }
 
+/*
+Output
+ Dis :  In display, hi prashanth kumar
+ Greet:  in greet, Hello Green World
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate multiple pointer-receiver methods on a struct
+- User has Firstname/Lastname; methods display and greet format messages
+- main updates the User value and calls both methods
+*/

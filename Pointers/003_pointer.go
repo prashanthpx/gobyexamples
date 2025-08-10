@@ -3,6 +3,7 @@ TO demonstrat poimter creation using new()
 */
 
 package main
+
 import (
 	"fmt"
 )
@@ -14,3 +15,15 @@ func main() {
 	*np = 100
 	fmt.Printf(" new value is %d\n", *np)
 }
+
+/*
+Output
+Type of np is *int, val is: 0, addr: <addr>
+ new value is 100
+*/
+
+/*
+Code Explanation:
+- Purpose: Use new to allocate a zero-initialized int and work with its pointer
+- *np dereferences to read/write; address print is platform dependent
+*/

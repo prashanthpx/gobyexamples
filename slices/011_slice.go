@@ -25,3 +25,21 @@ func main() {
 
 	fmt.Printf("sl : %v", sl)
 }
+
+/*
+Output
+len %d, cap %d 3 3
+len %d, cap %d 4 6
+len %d, cap %d 5 6
+len %d, cap %d 6 6
+len %d, cap %d 6 6
+len %d, cap %d 7 12
+sl : [1 0 0 20 30 40 50]
+*/
+
+/*
+Code Explanation:
+- Purpose: Show how append grows capacity over time
+- Starts with len=3, cap=3; after appends, capacity grows (implementation-defined growth factor)
+- Final slice contents demonstrate appended values
+*/

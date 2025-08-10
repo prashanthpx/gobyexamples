@@ -39,3 +39,19 @@ func main() {
 	// Printing in scientific notation
 	fmt.Printf(" scientific pi = %e\n", pi)
 }
+
+/*
+Output
+ x = 100 pi =  3.141243 pi = 3.141 isbool = true 6
+golanglanguage
+ concatstr : golang binary of x = 1100100
+ keycode A
+ hex of x = 64
+ scientific pi = 3.141243e+00
+*/
+
+/*
+Code Explanation:
+- Purpose: Demonstrate fmt.Printf verbs for ints, floats, bools, strings, and formats
+- %d, %f, %.3f, %t, %s, %b, %c, %x, %e demonstrate decimal, float precision, boolean, string, binary, char, hex, scientific
+*/
