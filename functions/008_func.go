@@ -44,4 +44,6 @@ This is known as a closure environment, and Go stores it alongside the function.
 
 Even though those variables would normally be “out of scope,” Go keeps them alive on the heap if the closure needs them.
 Closures bind to the variable, not a snapshot of its value.
+
+But since the inner function references "count", Go promotes "count" to the heap, and the closure keeps a pointer to it.
 */
