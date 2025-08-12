@@ -1,5 +1,8 @@
 # Go Slices: Complete Guide
 
+Run these examples
+- Hidden retention fix: go run slices/mistakes/retention.go
+
 ## **Slice Basics: Length vs Capacity**
 
 A slice in Go is a lightweight data structure that wraps:
@@ -130,6 +133,30 @@ Len: 10, Cap: 16
 ```
 
 ## **Memory Optimization**
+
+### Prevent hidden retention with three-index slicing
+```go
+// ❌ Small slice retains the whole big array in memory
+big := make([]byte, 1<<20) // 1MB
+sub := big[:10]            // cap is large; big cannot be GC'd while sub is alive
+_ = sub
+
+// ✅ Cap the slice to the current length to drop the tail capacity
+sub2 := big[:10:10] // len=10, cap=10
+_ = sub2
+```
+
+### Copy vs share when appending
+```go
+// ❌ Sharing backing array can surprise callers
+base := []int{1,2,3}
+view := base[:2]
+view = append(view, 9) // may overwrite base[2]
+
+// ✅ Force copy when you need isolation
+isolated := append([]int(nil), view...) // copy
+```
+
 
 ### **❌ Not Setting Capacity = "Memory Not Optimized"**
 
