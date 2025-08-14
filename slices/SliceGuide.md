@@ -174,6 +174,77 @@ s := make([]int, 0, 1000) // allocates space for 1000 ints upfront
 
 This avoids reallocation and copying, making the operation more memory- and time-efficient.
 
+
+## Passing Slices vs Arrays, and Why Use *[N]T
+
+Slices ([]T)
+- A slice is a small header (pointer, len, cap) pointing to an underlying array.
+- Passing a slice copies the header, but both caller and callee share the same underlying array.
+- Inside the callee:
+  - s[i] = ... mutates the caller’s data.
+  - s = append(s, ...) may allocate a new array when capacity is exceeded; unless you return the new slice (or pass *[]T), the caller won’t see the growth.
+
+Arrays ([N]T)
+- Passing an array by value copies all N elements. Mutations in the callee won’t affect the caller.
+- To mutate the caller’s array, pass *[N]T (pointer to array).
+
+Why pass a slice “as an array” to a function?
+- Sometimes you want the callee to operate on exactly N elements with strong, compile-time shape guarantees.
+- Go 1.17+ allows converting a slice (or subslice) to a pointer-to-array without copying, provided len(slice) >= N.
+- This bakes the invariant (exact length) into the type and simplifies inner loops.
+
+Use cases
+- Fixed-size algorithms/invariants: crypto blocks, UUIDs, hashes, wire headers, etc. (*[16]byte, *[32]byte, ...)
+- Zero-copy, index-safe loops: callee can index 0..N-1 without repeated checks.
+- APIs that require [N]T for clarity/safety.
+
+Example: operate on an exact 16-byte block (no copies)
+```go
+// Callee wants EXACTLY 16 bytes.
+func xorBlock(dst, a, b *[16]byte) {
+    for i := 0; i < 16; i++ {
+        dst[i] = a[i] ^ b[i]
+    }
+}
+
+func main() {
+    a := make([]byte, 16)
+    b := make([]byte, 16)
+    dst := make([]byte, 16)
+
+    // Convert slices to *[16]byte (Go 1.17+). Zero-copy view.
+    xorBlock((*[16]byte)(dst), (*[16]byte)(a), (*[16]byte)(b))
+}
+```
+Notes:
+- If any slice’s len < 16, that conversion panics at runtime — enforcing the contract loudly.
+- You can also convert a sub-slice if it has enough length, e.g., (*[16]byte)(buf[i:]).
+
+Comparison with a plain slice API
+```go
+// Flexible but needs checks:
+func xorBlockSlice(dst, a, b []byte) {
+    if len(dst) < 16 || len(a) < 16 || len(b) < 16 {
+        panic("need 16 bytes")
+    }
+    for i := 0; i < 16; i++ {
+        dst[i] = a[i] ^ b[i]
+    }
+}
+```
+Both work, but *[16]byte bakes the invariant into the type and avoids repeated length checks at call sites.
+
+When to use which?
+- Most code: accept a slice ([]T). It’s idiomatic, flexible, and lets callers pass any length.
+- Exactly-N contract, performance clarity, or API design: accept a pointer to array (*[N]T) and let callers convert with (*[N]T)(s). This gives:
+  - Stronger guarantees (exact size)
+  - Zero-copy conversion from slices
+  - Simpler inner loops that assume fixed bounds
+
+Reminders
+- Arrays passed by value copy. If you need mutation, use *[N]T.
+- Converting []T → *[N]T requires Go 1.17+ and len(slice) >= N, else it panics.
+
 ## **Summary**
 
 | Scenario | Capacity Behavior | Memory Efficient? |

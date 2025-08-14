@@ -77,13 +77,13 @@ type hmap struct {
 ```go
 func hashExample() {
     m := make(map[string]int)
-    
+
     // Go uses different hash functions for different key types
     m["hello"] = 1    // String hash
-    
+
     m2 := make(map[int]string)
     m2[42] = "answer" // Integer hash
-    
+
     // Hash function is deterministic within a program run
     // but may change between runs (hash randomization)
 }
@@ -143,18 +143,18 @@ type BadKey struct {
 ```go
 func floatKeyGotcha() {
     m := make(map[float64]string)
-    
+
     // NaN keys are problematic
     nan1 := math.NaN()
     nan2 := math.NaN()
-    
+
     m[nan1] = "first"
     m[nan2] = "second"
-    
+
     fmt.Println(len(m))           // 2 (NaN != NaN)
     fmt.Println(m[nan1])          // "" (can't retrieve!)
     fmt.Println(m[math.NaN()])    // "" (can't retrieve!)
-    
+
     // Each NaN is unique, but you can't look them up
 }
 ```
@@ -163,14 +163,14 @@ func floatKeyGotcha() {
 ```go
 func pointerKeys() {
     m := make(map[*int]string)
-    
+
     x, y := 42, 42
     m[&x] = "x pointer"
     m[&y] = "y pointer"
-    
+
     fmt.Println(len(m))     // 2 (different pointers)
     fmt.Println(m[&x])      // "x pointer"
-    
+
     // Pointer values matter, not what they point to
     z := &x
     fmt.Println(m[z])       // "x pointer" (same pointer)
@@ -185,23 +185,23 @@ func pointerKeys() {
 ```go
 func basicOperations() {
     m := make(map[string]int)
-    
+
     // Insert/Update
     m["key1"] = 10
     m["key2"] = 20
-    
+
     // Read with zero value
     value := m["key3"]        // 0 (zero value for int)
-    
+
     // Read with existence check
     value, exists := m["key1"]
     if exists {
         fmt.Println("Found:", value)
     }
-    
+
     // Delete
     delete(m, "key1")
-    
+
     // Length
     fmt.Println(len(m))       // 1
 }
@@ -211,17 +211,17 @@ func basicOperations() {
 ```go
 func commaOkIdiom() {
     m := map[string]int{"exists": 0}
-    
+
     // Without comma ok - ambiguous
     value := m["exists"]      // 0 - exists with value 0
     value = m["missing"]      // 0 - missing, zero value
-    
+
     // With comma ok - clear
     value, ok := m["exists"]
     if ok {
         fmt.Println("Key exists with value:", value)
     }
-    
+
     value, ok = m["missing"]
     if !ok {
         fmt.Println("Key does not exist")
@@ -235,17 +235,17 @@ func initializationPatterns() {
     // Empty map
     m1 := make(map[string]int)
     m2 := map[string]int{}
-    
+
     // With initial capacity hint
     m3 := make(map[string]int, 100)
-    
+
     // Map literal
     m4 := map[string]int{
         "one":   1,
         "two":   2,
         "three": 3,
     }
-    
+
     // Building from slice
     keys := []string{"a", "b", "c"}
     m5 := make(map[string]int)
@@ -263,16 +263,16 @@ func initializationPatterns() {
 ```go
 func nilMapBehavior() {
     var m map[string]int  // nil map
-    
+
     // ✅ Safe operations on nil map
     fmt.Println(len(m))           // 0
     fmt.Println(m["key"])         // 0 (zero value)
     value, ok := m["key"]         // 0, false
-    
+
     for k, v := range m {         // No iterations
         fmt.Println(k, v)
     }
-    
+
     // ❌ Panic operations on nil map
     // m["key"] = 1               // Runtime panic!
     // delete(m, "key")           // Runtime panic!
@@ -284,16 +284,16 @@ func nilMapBehavior() {
 func nilVsEmpty() {
     var nilMap map[string]int           // nil
     emptyMap := make(map[string]int)    // empty but not nil
-    
+
     fmt.Println(nilMap == nil)          // true
     fmt.Println(emptyMap == nil)        // false
     fmt.Println(len(nilMap))            // 0
     fmt.Println(len(emptyMap))          // 0
-    
+
     // Both behave the same for reads
     fmt.Println(nilMap["key"])          // 0
     fmt.Println(emptyMap["key"])        // 0
-    
+
     // Only empty map allows writes
     emptyMap["key"] = 1                 // ✅ Works
     // nilMap["key"] = 1                // ❌ Panic
@@ -308,20 +308,20 @@ func nilVsEmpty() {
 ```go
 func raceCondition() {
     m := make(map[string]int)
-    
+
     // ❌ This will cause race condition
     go func() {
         for i := 0; i < 1000; i++ {
             m[fmt.Sprintf("key%d", i)] = i
         }
     }()
-    
+
     go func() {
         for i := 0; i < 1000; i++ {
             _ = m[fmt.Sprintf("key%d", i)]
         }
     }()
-    
+
     // Runtime error: concurrent map read and map write
 }
 ```
@@ -352,22 +352,22 @@ func (sm *SafeMap) Get(key string) (int, bool) {
 // Option 2: sync.Map (for specific use cases)
 func syncMapExample() {
     var m sync.Map
-    
+
     // Store
     m.Store("key1", 42)
-    
+
     // Load
     value, ok := m.Load("key1")
     if ok {
         fmt.Println(value.(int))
     }
-    
+
     // LoadOrStore
     actual, loaded := m.LoadOrStore("key2", 100)
-    
+
     // Delete
     m.Delete("key1")
-    
+
     // Range
     m.Range(func(key, value interface{}) bool {
         fmt.Printf("%s: %v\n", key, value)
@@ -399,12 +399,12 @@ func randomIteration() {
     m := map[string]int{
         "a": 1, "b": 2, "c": 3, "d": 4, "e": 5,
     }
-    
+
     // Order is random and may change between runs
     for key, value := range m {
         fmt.Printf("%s: %d\n", key, value)
     }
-    
+
     // Go intentionally randomizes iteration order
     // to prevent code from depending on it
 }
@@ -416,14 +416,14 @@ func deterministicIteration() {
     m := map[string]int{
         "charlie": 3, "alice": 1, "bob": 2,
     }
-    
+
     // Collect and sort keys
     keys := make([]string, 0, len(m))
     for key := range m {
         keys = append(keys, key)
     }
     sort.Strings(keys)
-    
+
     // Iterate in sorted order
     for _, key := range keys {
         fmt.Printf("%s: %d\n", key, m[key])
@@ -435,21 +435,21 @@ func deterministicIteration() {
 ```go
 func iterationDuringModification() {
     m := map[string]int{"a": 1, "b": 2, "c": 3}
-    
+
     // ✅ Safe: delete current key
     for key := range m {
         if key == "b" {
             delete(m, key)
         }
     }
-    
+
     // ✅ Safe: delete other keys
     for key := range m {
         if key == "a" {
             delete(m, "c")
         }
     }
-    
+
     // ❌ Undefined: add keys during iteration
     for key := range m {
         if key == "a" {
@@ -467,10 +467,10 @@ func iterationDuringModification() {
 ```go
 func nilMapAssignment() {
     var m map[string]int
-    
+
     // ❌ This panics
     // m["key"] = 1
-    
+
     // ✅ Initialize first
     m = make(map[string]int)
     m["key"] = 1
@@ -482,13 +482,13 @@ func nilMapAssignment() {
 func mapComparison() {
     m1 := map[string]int{"a": 1}
     m2 := map[string]int{"a": 1}
-    
+
     // ❌ Maps are not comparable
     // fmt.Println(m1 == m2) // Compile error
-    
+
     // ✅ Only comparable to nil
     fmt.Println(m1 == nil) // false
-    
+
     // ✅ Manual comparison
     func mapsEqual(m1, m2 map[string]int) bool {
         if len(m1) != len(m2) {
@@ -515,15 +515,15 @@ func mapValueModification() {
     m := map[string]Person{
         "alice": {"Alice", 30},
     }
-    
+
     // ❌ Cannot modify map value directly
     // m["alice"].Age = 31 // Compile error
-    
+
     // ✅ Must reassign entire value
     p := m["alice"]
     p.Age = 31
     m["alice"] = p
-    
+
     // ✅ Or use pointer values
     m2 := map[string]*Person{
         "alice": &Person{"Alice", 30},
@@ -537,16 +537,16 @@ func mapValueModification() {
 func rangeVariableReuse() {
     m := map[string]int{"a": 1, "b": 2, "c": 3}
     var pointers []*string
-    
+
     // ❌ Wrong - all pointers point to same variable
     for key := range m {
         pointers = append(pointers, &key)
     }
-    
+
     for _, p := range pointers {
         fmt.Println(*p) // Prints last key 3 times
     }
-    
+
     // ✅ Correct - create new variable
     for key := range m {
         key := key // Create new variable
@@ -559,12 +559,12 @@ func rangeVariableReuse() {
 ```go
 func zeroValueConfusion() {
     m := map[string]int{}
-    
+
     // These look the same but are different
     value1 := m["missing"]     // 0 (key doesn't exist)
     m["zero"] = 0
     value2 := m["zero"]        // 0 (key exists with value 0)
-    
+
     // Use comma ok to distinguish
     _, exists1 := m["missing"] // false
     _, exists2 := m["zero"]    // true
@@ -588,16 +588,16 @@ func zeroValueConfusion() {
 func goodInitialization() {
     // Empty map
     m1 := make(map[string]int)
-    
+
     // With capacity hint for performance
     m2 := make(map[string]int, 100)
-    
+
     // Map literal for known values
     m3 := map[string]int{
         "one": 1,
         "two": 2,
     }
-    
+
     // Check for nil before use
     var m4 map[string]int
     if m4 == nil {
@@ -649,7 +649,7 @@ type SessionToken string
 func goodKeyTypes() {
     users := make(map[UserID]*User)
     sessions := make(map[SessionToken]*Session)
-    
+
     // Type safety and clarity
     var userID UserID = 123
     user := users[userID]
@@ -659,7 +659,7 @@ func goodKeyTypes() {
 func avoidProblematicKeys() {
     // Avoid float keys (NaN issues)
     // m1 := make(map[float64]string)
-    
+
     // Avoid large struct keys (copying overhead)
     // type LargeKey struct { data [1000]byte }
     // m2 := make(map[LargeKey]string)
@@ -680,10 +680,10 @@ func avoidProblematicKeys() {
 func memoryUsage() {
     // Map overhead: ~48 bytes + bucket array
     m := make(map[string]int)
-    
+
     // Each bucket: ~200 bytes (holds 8 key-value pairs)
     // Load factor: ~6.5 (rehash when bucket gets too full)
-    
+
     // Memory grows in powers of 2
     for i := 0; i < 100; i++ {
         m[fmt.Sprintf("key%d", i)] = i
@@ -696,7 +696,7 @@ func memoryUsage() {
 func capacityHints() {
     // ✅ Provide capacity hint if known
     m1 := make(map[string]int, 1000) // Allocates appropriate buckets
-    
+
     // ❌ Without hint - multiple rehashes
     m2 := make(map[string]int)
     for i := 0; i < 1000; i++ {
@@ -712,7 +712,7 @@ func BenchmarkMapAccess(b *testing.B) {
     for i := 0; i < 1000; i++ {
         m[fmt.Sprintf("key%d", i)] = i
     }
-    
+
     b.ResetTimer()
     for i := 0; i < b.N; i++ {
         _ = m["key500"] // ~1-2 ns on modern hardware
@@ -728,12 +728,12 @@ func BenchmarkMapAccess(b *testing.B) {
 ```go
 func question1() {
     m := map[string]int{}
-    
+
     fmt.Println(m["missing"])     // ?
-    
+
     m["zero"] = 0
     fmt.Println(m["zero"])        // ?
-    
+
     _, ok1 := m["missing"]
     _, ok2 := m["zero"]
     fmt.Println(ok1, ok2)         // ?
@@ -745,13 +745,13 @@ func question1() {
 ```go
 func question2() {
     m := make(map[int]int)
-    
+
     go func() {
         for i := 0; i < 1000; i++ {
             m[i] = i
         }
     }()
-    
+
     go func() {
         for i := 0; i < 1000; i++ {
             _ = m[i]
@@ -765,17 +765,17 @@ func question2() {
 ```go
 func question3() {
     m := make(map[string][]byte)
-    
+
     for i := 0; i < 1000000; i++ {
         key := fmt.Sprintf("key%d", i)
         m[key] = make([]byte, 1024) // 1KB per entry
     }
-    
+
     // Delete all entries
     for key := range m {
         delete(m, key)
     }
-    
+
     // Is memory freed?
 }
 // Answer: Buckets remain allocated; map doesn't shrink automatically
@@ -785,7 +785,7 @@ func question3() {
 ```go
 func question4() {
     m := map[string]int{"a": 1, "b": 2, "c": 3}
-    
+
     for i := 0; i < 3; i++ {
         for k := range m {
             fmt.Print(k)
@@ -798,12 +798,74 @@ func question4() {
 
 ### **Q5: What happens?**
 ```go
+
+## Passing Maps to Functions: What Reflects Back?
+
+Go passes map values by value, but a map is a small header pointing to shared backing storage. When you pass a map, the header is copied, but both headers point to the same data.
+
+What reflects back to the caller
+```go
+func touch(m map[string]int) {
+    m["x"] = 42        // insert/update: visible to caller
+    delete(m, "y")     // delete: visible to caller
+}
+
+func main() {
+    m := map[string]int{"y": 1}
+    touch(m)
+    // m == map[string]int{"x":42}
+}
+```
+
+What does not reflect
+Reassigning the local map variable only changes the callee’s copy of the header:
+```go
+func replace(m map[string]int) {
+    m = map[string]int{"new": 1} // caller NOT affected
+}
+
+func main() {
+    m := map[string]int{"old": 1}
+    replace(m)
+    // m is still {"old":1}
+}
+```
+
+If you need to change which map the caller sees, return the new map or pass a pointer to the map:
+```go
+func replaceAndReturn(m map[string]int) map[string]int {
+    return map[string]int{"new": 1}
+}
+
+func replaceViaPtr(pm *map[string]int) {
+    *pm = map[string]int{"new": 1}
+}
+```
+
+Gotchas with values stored in maps
+- Struct values: retrieving v := m[key] gives a copy. Mutating fields on v doesn’t update the map entry unless you assign it back.
+```go
+type T struct{ N int }
+m := map[string]T{"a": {1}}
+v := m["a"]
+v.N = 2          // modifies the copy
+m["a"] = v       // write it back; now reflected
+// or store pointers: map[string]*T
+```
+- Slice values: s := m[key] copies the slice header; s[i] = ... affects the same backing array. If you re-slice/append causing reallocation, assign back: m[key] = s.
+
+Concurrency note
+- Maps are not safe for concurrent writes. Guard with sync.Mutex/sync.RWMutex or use sync.Map.
+
+TL;DR
+- Mutate entries and you’ll see changes in the caller; reassign the map and you won’t — return it or pass a pointer if you need that.
+
 func question5() {
     var m map[string]int
-    
+
     fmt.Println(len(m))    // ?
     fmt.Println(m["key"])  // ?
-    
+
     m["key"] = 1           // ?
 }
 // Answer: 0, 0, panic (assignment to nil map)

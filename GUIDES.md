@@ -20,6 +20,7 @@ Use this index to jump to the guide for each topic.
 - Pointers: [Pointers/PointersGuide.md](Pointers/PointersGuide.md)
 - Slices: [slices/SliceGuide.md](slices/SliceGuide.md)
 - Structs: [structures/StructuresGuide.md](structures/StructuresGuide.md)
+- Mutexes: [mutex/MutexGuide.md](mutex/MutexGuide.md)
 
 ---
 
