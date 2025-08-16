@@ -21,6 +21,7 @@ Use this index to jump to the guide for each topic.
 - Slices: [slices/SliceGuide.md](slices/SliceGuide.md)
 - Structs: [structures/StructuresGuide.md](structures/StructuresGuide.md)
 - Mutexes: [mutex/MutexGuide.md](mutex/MutexGuide.md)
+- Types: [types/TypesGuide.md](types/TypesGuide.md)
 
 ---
 
