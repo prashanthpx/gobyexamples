@@ -114,6 +114,10 @@ How to use:
 ## Atomics
 
 - Mixing atomic and non-atomic access; data races
+- Plain read of an atomically-updated variable (racy); use atomic.Load
+  - Bad: atomic/012_bad_plain_read.go; Good: atomic/013_good_atomic_load.go
+  - atomic/AtomicGuide.md#mistakes-guide-with-runnable-examples
+
   - atomic/AtomicGuide.md#7-common-mistakes-and-gotchas
 - Piecemeal updates to multi-field structs with atomics
   - atomic/AtomicGuide.md#7-common-mistakes-and-gotchas
@@ -123,6 +127,16 @@ How to use:
   - atomic/AtomicGuide.md#7-common-mistakes-and-gotchas
 - Using atomics where RWMutex is clearer/faster under contention
   - atomic/AtomicGuide.md#6-atomics-vs-locks-when-to-use-which
+- Not initializing atomic.Value before first Load (panic) or mutating stored snapshots
+  - Initialize with Store once; store immutable snapshots thereafter
+  - atomic/AtomicGuide.md#5-read-mostly-data
+- ABA pitfalls with CAS on pointers; no versioning
+  - Example: atomic/007_aba_versioned_pointer.go
+- Failing to establish happens-before (publish/subscribe)
+  - Example: atomic/008_memory_ordering.go
+- Choosing the wrong abstraction (atomic.Value vs atomic.Pointer)
+  - Example trade-offs: atomic/009_pointer_vs_value_example.go
+
 
 - Resetting counters with non-atomic writes (racy); prefer epoch swap with atomic.Swap(0)
   - Example: atomic/011_periodic_reset.go

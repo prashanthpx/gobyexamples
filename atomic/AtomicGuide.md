@@ -41,6 +41,19 @@ Run these examples
 
 ## 2) Go memory model and atomic happens-before
 
+Why use Load/Store instead of plain reads/writes?
+- If a variable is written with atomic ops, all concurrent reads must also be atomic (Load); mixing plain reads causes data races
+- On 32-bit arch, 64-bit values may tear without atomic loads; Load prevents torn reads
+- Atomics establish happens-before; plain reads may observe stale values
+
+Run these examples
+- Bad (plain read): go run -race atomic/012_bad_plain_read.go
+- Good (atomic.Load): go run -race atomic/013_good_atomic_load.go
+
+32-bit/Alignment note
+- On 32-bit platforms, 64-bit values require proper alignment. Prefer typed atomics (atomic.Int64) or ensure 64-bit fields are naturally aligned (e.g., placed first in structs) to avoid torn reads.
+
+
 - sync/atomic operations establish ordering (happens-before) between goroutines
 - Loads/Stores from sync/atomic include the necessary acquire/release semantics; do not mix atomic and non-atomic access to the same variable
 - For compound state, prefer locks or copy-on-write with atomics pointing to immutable data
@@ -116,9 +129,36 @@ Mistakes Index (quick scan)
 
 ---
 
+### Mistakes Guide (with runnable examples)
+
+- Mixing atomic and non-atomic access to the same variable
+  - Bad: go run -race atomic/012_bad_plain_read.go
+  - Good: go run -race atomic/013_good_atomic_load.go
+
+- Copying typed atomics after first use
+  - Do not copy atomic.Int64/Bool/Pointer[T] once in use; encapsulate inside a type
+
+- Piecemeal updates to multi-field structs with atomics
+  - Prefer a lock or swap immutable snapshots with atomic.Value / atomic.Pointer
+
+- Spinning CAS loops without backoff
+  - Prefer Add/Swap when possible; otherwise add backoff/yield
+
+- Resetting counters with non-atomic writes
+  - Use epoch swap via atomic.Int64.Swap(0): go run atomic/011_periodic_reset.go
+
+- Single hot counter bottleneck
+  - Shard counters: go run atomic/006_sharded_counter.go
+  - Benchmark sharded adds: go test -bench=Shard -benchmem ./atomic/bench -cpu=1,4
+
+- When a lock is clearer/faster
+  - Read-mostly bench (RWMutex vs atomic.Value): go test -bench=ReadMostly -benchmem ./atomic/bench -cpu=1,4
+  - See section: Atomics vs Locks (when to use which)
+
 ## 8) Best practices
 
 - Prefer typed atomics (atomic.Int64/Bool/Pointer[T]) for clarity and type safety
+- On 32-bit platforms, ensure 64-bit fields are aligned; prefer atomic.Int64 to avoid torn reads
 - Use immutable snapshots with atomic.Value / atomic.Pointer to avoid reader locks
 - Encapsulate atomics in your types; expose methods, not raw fields
 - Document whether fields are updated atomically or under a lock
