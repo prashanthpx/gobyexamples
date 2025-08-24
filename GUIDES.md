@@ -23,6 +23,7 @@ Use this index to jump to the guide for each topic.
 - Mutexes: [mutex/MutexGuide.md](mutex/MutexGuide.md)
 - Types: [types/TypesGuide.md](types/TypesGuide.md)
 - I/O Readers: [io.reader/IOReaderGuide.md](io.reader/IOReaderGuide.md)
+- Atomics: [atomic/AtomicGuide.md](atomic/AtomicGuide.md)
 
 ---
 

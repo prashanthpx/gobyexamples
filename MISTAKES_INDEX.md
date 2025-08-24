@@ -111,6 +111,20 @@ How to use:
 - internal/ to enforce encapsulation boundaries
   - packages/PackagesGuide.md#3-internal-packages-and-visibility
 
+## Atomics
+
+- Mixing atomic and non-atomic access; data races
+  - atomic/AtomicGuide.md#7-common-mistakes-and-gotchas
+- Piecemeal updates to multi-field structs with atomics
+  - atomic/AtomicGuide.md#7-common-mistakes-and-gotchas
+- Spinning CAS loops without backoff
+  - atomic/AtomicGuide.md#7-common-mistakes-and-gotchas
+- Copying typed atomics after first use
+  - atomic/AtomicGuide.md#7-common-mistakes-and-gotchas
+- Using atomics where RWMutex is clearer/faster under contention
+  - atomic/AtomicGuide.md#6-atomics-vs-locks-when-to-use-which
+
+
 ---
 
 ## Tooling tips
