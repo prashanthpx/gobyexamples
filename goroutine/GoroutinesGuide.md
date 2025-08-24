@@ -183,6 +183,18 @@ Tips:
 
 ## 5) Synchronization: Mutex, Atomic, Channels (when to use which)
 
+Channels + Locks: when to combine
+- Use channels to distribute work and transfer ownership of items (no shared mutation while processing)
+- Use locks to protect shared aggregation structures (e.g., maps, counters) that multiple workers update
+- Avoid forcing everything through channels if you’re really aggregating into shared state — a simple mutex is usually clearer and faster
+
+Diagram
+- Producer(s) -> jobs chan -> Workers -> (mu.Lock) shared map/counter (mu.Unlock)
+- Cancellation via context propagated to producers/workers; workers exit, then close results
+
+Run these examples
+- Channel + Mutex (counts): go run goroutine/examples/chan_mutex_counts.go
+
 - Mutex (sync.Mutex/RWMutex): protect shared mutable state
 - Atomic (sync/atomic): low-level lock-free ops on single words (counters/flags)
 - Channels: communicate ownership or data; avoid sharing state
@@ -232,6 +244,13 @@ Use runtime.Gosched() rarely; the scheduler is generally sufficient.
 ---
 
 ## 7) Common Concurrency Patterns
+
+Run these examples
+- Channel + Mutex (counts): go run goroutine/examples/chan_mutex_counts.go
+- Cancellable generator: go run goroutine/examples/generator_fixed.go
+- Fan-in with context cancellation: go run goroutine/examples/fanin_context.go
+- Rate limiter (token bucket): go run goroutine/examples/rate_limiter_ticker.go
+- Worker pool with graceful shutdown: go run goroutine/examples/worker_pool_shutdown.go
 
 Fan-out / Fan-in:
 ```go

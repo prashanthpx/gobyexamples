@@ -124,6 +124,9 @@ How to use:
 - Using atomics where RWMutex is clearer/faster under contention
   - atomic/AtomicGuide.md#6-atomics-vs-locks-when-to-use-which
 
+- Resetting counters with non-atomic writes (racy); prefer epoch swap with atomic.Swap(0)
+  - Example: atomic/011_periodic_reset.go
+
 
 ---
 
