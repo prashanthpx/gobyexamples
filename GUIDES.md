@@ -25,25 +25,36 @@ Use this index to jump to the guide for each topic.
 - I/O Readers: [io.reader/IOReaderGuide.md](io.reader/IOReaderGuide.md)
 - Atomics: [atomic/AtomicGuide.md](atomic/AtomicGuide.md)
 
+- Goroutines: [goroutine/GoroutinesGuide.md](goroutine/GoroutinesGuide.md)
+- Channels: [channels/ChannelsGuide.md](channels/ChannelsGuide.md)
+- Concurrency Patterns: [wait_group/ConcurrencyGuide.md](wait_group/ConcurrencyGuide.md), [job_queues/JobQueuesGuide.md](job_queues/JobQueuesGuide.md), [worker_queue/WorkerQueuesGuide.md](worker_queue/WorkerQueuesGuide.md)
+- Interfaces: [interface/InterfacesGuide.md](interface/InterfacesGuide.md)
+- Methods: [methods/MethodsGuide.md](methods/MethodsGuide.md)
+- Operators: [Operators/OperatorsGuide.md](Operators/OperatorsGuide.md)
+- Packages & Modules: [packages/PackagesGuide.md](packages/PackagesGuide.md)
+- Printf & Formatting: [printf/PrintfGuide.md](printf/PrintfGuide.md)
+- Time: [time/TimeGuide.md](time/TimeGuide.md)
+- Conditionals & Control Flow: [conditional/ConditionalsGuide.md](conditional/ConditionalsGuide.md)
+- Validation: [validator/ValidatorGuide.md](validator/ValidatorGuide.md)
+- YAML & Encoding: [yaml/YAMLGuide.md](yaml/YAMLGuide.md)
+- Error Handling: [testerrors/ErrorHandlingGuide.md](testerrors/ErrorHandlingGuide.md)
+- Strings: [strings/StringsGuide.md](strings/StringsGuide.md)
+
+
 ---
 
-## In Progress / Planned (many are now completed)
+## In Progress / Planned
 
-- Channels: channels/ChannelsGuide.md
-- Concurrency Patterns: wait_group/ConcurrencyGuide.md, job_queues/JobQueuesGuide.md, worker_queue/WorkerQueuesGuide.md
-- Goroutines: goroutine/GoroutinesGuide.md
-- Interfaces: interface/InterfacesGuide.md
-- Methods: methods/MethodsGuide.md
-- Operators: Operators/OperatorsGuide.md
-- Packages & Modules: packages/PackagesGuide.md
-- Printf & Formatting: printf/PrintfGuide.md
-- Time: time/TimeGuide.md
-- Conditionals & Control Flow: conditional/ConditionalsGuide.md
-- Validation: validator/ValidatorGuide.md
-- YAML & Encoding: yaml/YAMLGuide.md
-- Error Handling: testerrors/ErrorHandlingGuide.md
+- Add more runnable examples and microbenchmarks where useful
+- Expand profiling coverage (pprof CPU/heap, traces) and link from guides
+- Add more “Mistakes Index” cross-links across guides
+- Deepen generics coverage (constraint design, performance)
+- Add unsafe.Pointer cautionary appendix (advanced; opt-in)
+- Expand YAML/JSON custom marshal/unmarshal recipes
+- More concurrency patterns (errgroup variants, backpressure, retries)
+- More IO Reader decorators and HTTP defensive patterns (MaxBytesReader, timeouts)
 
-(These will appear as the files are added. Check back or watch the repo for updates.)
+(Hint: If you want a specific topic prioritized, open an issue and we’ll queue it up.)
 
 ---
 
