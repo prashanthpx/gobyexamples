@@ -110,6 +110,9 @@ How to use:
   - packages/PackagesGuide.md#2-import-paths-and-semantic-import-versioning-v2
 - internal/ to enforce encapsulation boundaries
   - packages/PackagesGuide.md#3-internal-packages-and-visibility
+- Using := at package scope (expected declaration); use var for globals and := inside functions
+  - arrays/ArraysGuide.md#package-scope-vs-function-scope-initialization--vs-var
+
 
 ## Atomics
 
