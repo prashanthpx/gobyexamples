@@ -1,17 +1,17 @@
 # Go Goroutines: Advanced Developer Guide
 
 ## Table of Contents
-1. Goroutine Fundamentals (what and why)
-2. Scheduler Model (G-M-P), Stacks, Parallelism
-3. Launching and Waiting (WaitGroup, done patterns)
-4. Cancellation with context.Context
-5. Synchronization: Mutex, Atomic, Channels (when to use which)
-6. Blocking, Preemption, and Syscalls
-7. Common Concurrency Patterns
-8. Goroutine Leaks and How to Avoid Them
-9. Best Practices
-10. Performance Considerations
-11. Advanced Challenge Questions
+1. [Goroutine Fundamentals (what and why)](#toc-1-fundamentals)
+2. [Scheduler Model (G-M-P), Stacks, Parallelism](#toc-2-scheduler)
+3. [Launching and Waiting (WaitGroup, done patterns)](#toc-3-launch-wait)
+4. [Cancellation with context.Context](#toc-4-cancellation)
+5. [Synchronization: Mutex, Atomic, Channels (when to use which)](#toc-5-sync)
+6. [Blocking, Preemption, and Syscalls](#toc-6-blocking)
+7. [Common Concurrency Patterns](#toc-7-patterns)
+8. [Goroutine Leaks and How to Avoid Them](#toc-8-leaks)
+9. [Best Practices](#toc-9-best)
+10. [Performance Considerations](#toc-10-performance)
+11. [FAQ](#toc-11-advanced)
 
 
 Run these examples
@@ -19,6 +19,8 @@ Run these examples
 - Benchmarks: go test -bench=. -cpu=1,4 -benchtime=200ms ./goroutine/bench
 
 ---
+
+<a id="toc-1-fundamentals"></a>
 
 ## 1) Goroutine Fundamentals (what and why)
 
@@ -53,6 +55,8 @@ Why goroutines matter:
 
 ---
 
+<a id="toc-2-scheduler"></a>
+
 ## 2) Scheduler Model (G-M-P), Stacks, Parallelism
 
 Concepts:
@@ -79,6 +83,8 @@ Notes:
 - I/O/syscalls park goroutines; scheduler runs others
 
 ---
+
+<a id="toc-3-launch-wait"></a>
 
 ## 3) Launching and Waiting (WaitGroup, done patterns)
 
@@ -141,6 +147,8 @@ func main() {
 
 ---
 
+<a id="toc-4-cancellation"></a>
+
 ## 4) Cancellation with context.Context
 
 Run this example
@@ -180,6 +188,8 @@ Tips:
 - Do not store ctx in struct; pass it down the call chain
 
 ---
+
+<a id="toc-5-sync"></a>
 
 ## 5) Synchronization: Mutex, Atomic, Channels (when to use which)
 
@@ -225,6 +235,8 @@ Guideline: choose the simplest correct tool. Channels for communication; mutex/a
 
 ---
 
+<a id="toc-6-blocking"></a>
+
 ## 6) Blocking, Preemption, and Syscalls
 
 - Blocking operations (I/O, time.Sleep, channel send/recv) park the goroutine
@@ -242,6 +254,8 @@ for {
 Use runtime.Gosched() rarely; the scheduler is generally sufficient.
 
 ---
+
+<a id="toc-7-patterns"></a>
 
 ## 7) Common Concurrency Patterns
 
@@ -312,6 +326,8 @@ func stage2(in <-chan item, out chan<- item) { for v := range in { out <- v*v } 
 
 ---
 
+<a id="toc-8-leaks"></a>
+
 ## 8) Goroutine Leaks and How to Avoid Them
 
 Context propagation anti-patterns and fixes:
@@ -367,6 +383,8 @@ Missing receiver on unbuffered channel:
 
 ---
 
+<a id="toc-9-best"></a>
+
 ## 9) Best Practices
 
 - Keep goroutines short-lived or clearly owned (who cancels/Waits?)
@@ -377,6 +395,8 @@ Missing receiver on unbuffered channel:
 - Document thread-safety expectations of your types
 
 ---
+
+<a id="toc-10-performance"></a>
 
 ## 10) Performance Considerations
 
@@ -454,7 +474,9 @@ func main(){
 
 ---
 
-## 11) Advanced Challenge Questions
+<a id="toc-11-advanced"></a>
+
+## 11) FAQ
 
 (See also: Section 8 for leak patterns and context propagation)
 

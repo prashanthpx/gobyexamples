@@ -1,24 +1,26 @@
 # Formatting and Printing in Go (fmt): Advanced Developer Guide
 
 ## Table of Contents
-1. Print Families (Print, Fprint, Sprint)
-2. Verbs and Flags Overview
-3. Formatting Numbers (int, uint, float, complex)
-4. Strings, Bytes, Runes
-5. Structs, Maps, Slices, Pointers
-6. Width, Precision, and Alignment
-7. Custom Formatting (fmt.Stringer, fmt.GoStringer, fmt.Formatter)
-8. Errors and %w Wrapping
-9. Logging vs fmt: Performance Notes
-10. Common Mistakes and Gotchas
-11. Best Practices
-12. Advanced Challenge Questions
+1. [Print Families (Print, Fprint, Sprint)](#toc-1-print-families)
+2. [Verbs and Flags Overview](#toc-2-verbs-flags)
+3. [Formatting Numbers (int, uint, float, complex)](#toc-3-numbers)
+4. [Strings, Bytes, Runes](#toc-4-strings-bytes-runes)
+5. [Structs, Maps, Slices, Pointers](#toc-5-structs-maps-slices-pointers)
+6. [Width, Precision, and Alignment](#toc-6-width-precision)
+7. [Custom Formatting (fmt.Stringer, fmt.GoStringer, fmt.Formatter)](#toc-7-custom-formatting)
+8. [Errors and %w Wrapping](#toc-8-errors-wrapping)
+9. [Logging vs fmt: Performance Notes](#toc-9-logging-vs-fmt)
+10. [Common Mistakes and Gotchas](#toc-10-mistakes)
+11. [Best Practices](#toc-11-best-practices)
+12. [Advanced Challenge Questions](#toc-12-advanced-questions)
 
 
 Run these examples
 - Vet format strings: see section below; try the fmtbad.go snippet
 
 ---
+
+<a id="toc-1-print-families"></a>
 
 ## 1) Print Families (Print, Fprint, Sprint)
 
@@ -48,6 +50,8 @@ func main() {
 
 ---
 
+<a id="toc-2-verbs-flags"></a>
+
 ## 2) Verbs and Flags Overview
 
 - Generic: %v (value), %+v (include field names), %#v (Go-syntax), %T (type)
@@ -67,6 +71,8 @@ fmt.Printf("%#x %#X\n", 255, 255) // 0xff 0XFF (with # alternate form)
 ```
 
 ---
+
+<a id="toc-3-numbers"></a>
 
 ## 3) Formatting Numbers (int, uint, float, complex)
 
@@ -93,6 +99,8 @@ Notes:
 
 ---
 
+<a id="toc-4-strings-bytes-runes"></a>
+
 ## 4) Strings, Bytes, Runes
 
 ```go
@@ -114,6 +122,8 @@ Notes:
 - % x inserts spaces between bytes when formatting slices
 
 ---
+
+<a id="toc-5-structs-maps-slices-pointers"></a>
 
 ## 5) Structs, Maps, Slices, Pointers
 
@@ -138,6 +148,8 @@ Notes:
 
 ---
 
+<a id="toc-6-width-precision"></a>
+
 ## 6) Width, Precision, and Alignment
 
 `%[index][flags][width][.prec][verb]`
@@ -152,6 +164,8 @@ fmt.Printf("%[2]d %[1]s\n", "idx1", 2) // prints: 2 idx1
 ```
 
 ---
+
+<a id="toc-7-custom-formatting"></a>
 
 ## 7) Custom Formatting (fmt.Stringer, fmt.GoStringer, fmt.Formatter)
 
@@ -186,6 +200,8 @@ func (m Money) Format(f fmt.State, c rune) {
 
 ---
 
+<a id="toc-8-errors-wrapping"></a>
+
 ## 8) Errors and %w Wrapping
 
 Use `%w` in `fmt.Errorf` to wrap errors (Go 1.13+). Unwrap with `errors.Is/As`.
@@ -210,6 +226,8 @@ func main() {
 ```
 
 ---
+
+<a id="toc-9-logging-vs-fmt"></a>
 
 ## 9) Logging vs fmt: Performance Notes
 

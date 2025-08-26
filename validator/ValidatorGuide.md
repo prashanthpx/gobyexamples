@@ -1,18 +1,20 @@
 # Validation in Go: Advanced Developer Guide
 
 ## Table of Contents
-1. Validation Philosophy (where and how)
-2. Validating Structs (standard library only)
-3. Accumulating Multiple Errors
-4. Contextual Validation (cross-field, external checks)
-5. Custom Types and Value Objects
-6. JSON/YAML Tag Interactions and Zero Values
-7. Common Mistakes and Gotchas
-8. Best Practices
-9. Performance Considerations
-10. Advanced Challenge Questions
+1. [Validation Philosophy (where and how)](#toc-1-philosophy)
+2. [Validating Structs (standard library only)](#toc-2-structs)
+3. [Accumulating Multiple Errors](#toc-3-multi-errors)
+4. [Contextual Validation (cross-field, external checks)](#toc-4-contextual)
+5. [Custom Types and Value Objects](#toc-5-value-objects)
+6. [JSON/YAML Tag Interactions and Zero Values](#toc-6-tags-zero)
+7. [Common Mistakes and Gotchas](#toc-7-mistakes)
+8. [Best Practices](#toc-8-best)
+9. [Performance Considerations](#toc-9-performance)
+10. [Advanced Challenge Questions](#toc-10-advanced)
 
 ---
+
+<a id="toc-1-philosophy"></a>
 
 ## 1) Validation Philosophy (where and how)
 
@@ -22,6 +24,8 @@
 - For batch validation, accumulate errors rather than failing fast
 
 ---
+
+<a id="toc-2-structs"></a>
 
 ## 2) Validating Structs (standard library only)
 
@@ -62,6 +66,8 @@ func main(){
 
 ---
 
+<a id="toc-3-multi-errors"></a>
+
 ## 3) Accumulating Multiple Errors
 
 Batch callers appreciate getting all issues at once.
@@ -87,6 +93,8 @@ func (u User) ValidateAll() error {
 Tip: Consider returning a typed error that exposes fields for programmatic handling.
 
 ---
+
+<a id="toc-4-contextual"></a>
 
 ## 4) Contextual Validation (cross-field, external checks)
 
@@ -114,6 +122,8 @@ Guidelines:
 
 ---
 
+<a id="toc-5-value-objects"></a>
+
 ## 5) Custom Types and Value Objects
 
 Wrap primitives to encode invariants and centralize validation.
@@ -140,6 +150,8 @@ Advantages:
 
 ---
 
+<a id="toc-6-tags-zero"></a>
+
 ## 6) JSON/YAML Tag Interactions and Zero Values
 
 Tags affect marshaling, not validation — but they influence what you receive.
@@ -158,6 +170,8 @@ Notes:
 - For YAML/JSON, unknown fields may be accepted unless you opt into strict decoding
 
 ---
+
+<a id="toc-7-mistakes"></a>
 
 ## 7) Common Mistakes and Gotchas
 
@@ -188,6 +202,8 @@ Notes:
 
 ---
 
+<a id="toc-8-best"></a>
+
 ## 8) Best Practices
 
 - Keep validation deterministic and side-effect free (except deliberate existence checks)
@@ -198,6 +214,8 @@ Notes:
 
 ---
 
+<a id="toc-9-performance"></a>
+
 ## 9) Performance Considerations
 
 - Validation is usually I/O-bound (lookups); micro-optimizations rarely needed
@@ -205,6 +223,8 @@ Notes:
 - Cache heavy metadata (e.g., compiled regex) in package-level vars
 
 ---
+
+<a id="toc-10-advanced"></a>
 
 ## 10) Advanced Challenge Questions
 

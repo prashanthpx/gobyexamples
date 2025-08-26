@@ -1,18 +1,20 @@
 # Conditionals in Go: Advanced Developer Guide
 
 ## Table of Contents
-1. if Statements and Short Declarations
-2. switch (Values, Expressions, No-Condition)
-3. Type Switches
-4. Labeled break/continue and fallthrough
-5. Boolean Logic and Short-Circuiting
-6. Error Handling Patterns with Conditionals
-7. Common Mistakes and Gotchas
-8. Best Practices
-9. Performance Considerations
-10. Advanced Challenge Questions
+1. [if Statements and Short Declarations](#toc-1-if-short)
+2. [switch (Values, Expressions, No-Condition)](#toc-2-switch)
+3. [Type Switches](#toc-3-type-switch)
+4. [Labeled break/continue and fallthrough](#toc-4-labels-fallthrough)
+5. [Boolean Logic and Short-Circuiting](#toc-5-bool-shortcircuit)
+6. [Error Handling Patterns with Conditionals](#toc-6-error-handling)
+7. [Common Mistakes and Gotchas](#toc-7-mistakes)
+8. [Best Practices](#toc-8-best-practices)
+9. [Performance Considerations](#toc-9-performance)
+10. [Advanced Challenge Questions](#toc-10-advanced)
 
 ---
+
+<a id="toc-1-if-short"></a>
 
 ## 1) if Statements and Short Declarations
 
@@ -45,6 +47,8 @@ Notes:
 - Prefer early-returns on errors for clarity; use short `if` when you need values in both arms
 
 ---
+
+<a id="toc-2-switch"></a>
 
 ## 2) switch (Values, Expressions, No-Condition)
 
@@ -87,6 +91,8 @@ Notes:
 
 ---
 
+<a id="toc-3-type-switch"></a>
+
 ## 3) Type Switches
 
 A type switch branches on the dynamic type of an interface value. It does not perform allocations.
@@ -124,6 +130,8 @@ Notes:
 - The zero case `case nil` is valid and often useful
 
 ---
+
+<a id="toc-4-labels-fallthrough"></a>
 
 ## 4) Labeled break/continue and fallthrough
 
@@ -164,6 +172,8 @@ Notes:
 
 ---
 
+<a id="toc-5-bool-shortcircuit"></a>
+
 ## 5) Boolean Logic and Short-Circuiting
 
 Go uses short-circuit evaluation for `&&` and `||`.
@@ -186,6 +196,8 @@ Notes:
 
 ---
 
+<a id="toc-6-error-handling"></a>
+
 ## 6) Error Handling Patterns with Conditionals
 
 Idiomatic early return:
@@ -206,6 +218,8 @@ if errors.As(err, &e) { /* use fields on e */ }
 ```
 
 ---
+
+<a id="toc-7-mistakes"></a>
 
 ## 7) Common Mistakes and Gotchas
 
@@ -249,6 +263,8 @@ if s, ok := i.(string); ok { _ = s } else { /* handle */ }
 
 ---
 
+<a id="toc-8-best-practices"></a>
+
 ## 8) Best Practices
 
 - Prefer early returns over deep nesting
@@ -260,6 +276,8 @@ if s, ok := i.(string); ok { _ = s } else { /* handle */ }
 
 ---
 
+<a id="toc-9-performance"></a>
+
 ## 9) Performance Considerations
 
 - Branch prediction: keep hot, likely branches first for readability (the compiler may not reorder)
@@ -267,6 +285,8 @@ if s, ok := i.(string); ok { _ = s } else { /* handle */ }
 - Type switches and assertions are efficient; they do not allocate by themselves
 
 ---
+
+<a id="toc-10-advanced"></a>
 
 ## 10) Advanced Challenge Questions
 

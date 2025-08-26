@@ -1,16 +1,16 @@
 # Packages and Modules in Go: Advanced Developer Guide
 
 ## Table of Contents
-1. Packages, Modules, and go.mod
-2. Import Paths and Semantic Import Versioning (v2+)
-3. Internal Packages and Visibility
-4. init Functions and Initialization Order
-5. Build Tags and Files
-6. Replace, Exclude, and Vendoring
-7. Workspaces (go work)
-8. Common Mistakes and Gotchas
-9. Best Practices
-10. Advanced Challenge Questions
+1. [Packages, Modules, and go.mod](#toc-1-packages)
+2. [Import Paths and Semantic Import Versioning (v2+)](#toc-2-import-paths)
+3. [Internal Packages and Visibility](#toc-3-internal)
+4. [init Functions and Initialization Order](#toc-4-init)
+5. [Build Tags and Files](#toc-5-build-tags)
+6. [Replace, Exclude, and Vendoring](#toc-6-replace-exclude)
+7. [Workspaces (go work)](#toc-7-workspaces)
+8. [Common Mistakes and Gotchas](#toc-8-mistakes)
+9. [Best Practices](#toc-9-best)
+10. [Advanced Challenge Questions](#toc-10-advanced)
 
 ---
 

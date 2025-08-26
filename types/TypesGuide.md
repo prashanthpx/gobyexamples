@@ -12,22 +12,26 @@ Run these examples
 - Custom JSON for newtypes: go run types/010_json_newtype.go
 
 ---
-
 ## Table of Contents
-1. Built-in types & zero values
-2. Defined types vs type aliases
-3. Conversions, underlying types, and assignment rules
-4. Untyped constants, iota, and enums
-5. Methods on defined types; method sets and API design
-6. Interfaces: satisfaction, assertions, and switches
-7. Generics: type parameters, constraints, and ~underlying types
-8. comparable, maps/sets, and pitfalls
-9. Custom serialization for newtypes
+1. [Built-in types & zero values](#toc-1-builtins)
+2. [Defined types vs type aliases](#toc-2-defined-vs-alias)
+3. [Conversions, underlying types, and assignment rules](#toc-3-conversions)
+4. [Untyped constants, iota, and enums](#toc-4-untyped)
+5. [Methods on defined types; method sets and API design](#toc-5-methods)
+6. [Interfaces: satisfaction, assertions, and switches](#toc-6-interfaces)
+7. [Generics: type parameters, constraints, and ~underlying types](#toc-7-generics)
+8. [comparable, maps/sets, and pitfalls](#toc-8-comparable)
+9. [Custom serialization for newtypes](#toc-9-custom-serialization)
+
+
+
 10. Common mistakes and gotchas
 11. Best practices
-12. Advanced interview questions
+12. FAQ
 
 ---
+
+<a id="toc-1-builtins"></a>
 
 ## 1) Built-in types & zero values
 
@@ -40,6 +44,8 @@ Run these examples
 See: types/001_basic_types.go
 
 ---
+
+<a id="toc-2-defined-vs-alias"></a>
 
 ## 2) Defined types vs type aliases
 
@@ -56,6 +62,8 @@ See: types/002_defined_vs_alias.go
 
 ---
 
+<a id="toc-3-conversions"></a>
+
 ## 3) Conversions, underlying types, and assignment rules
 
 - Assignment between distinct defined types requires explicit conversion, even if underlying types match
@@ -66,6 +74,8 @@ See: types/003_conversions.go
 
 ---
 
+<a id="toc-4-untyped"></a>
+
 ## 4) Untyped constants, iota, and enums
 
 - Untyped constants adopt a type at use site; useful for precise literals without overflow
@@ -74,6 +84,8 @@ See: types/003_conversions.go
 See: types/004_untyped_iota.go
 
 ---
+
+<a id="toc-5-methods"></a>
 
 ## 5) Methods on defined types; method sets and API design
 
@@ -84,6 +96,8 @@ See: types/005_methods_on_types.go
 
 ---
 
+<a id="toc-6-interfaces"></a>
+
 ## 6) Interfaces: satisfaction, assertions, and switches
 
 - Satisfaction is implicit; method sets matter (T vs *T)
@@ -92,6 +106,8 @@ See: types/005_methods_on_types.go
 See: types/006_type_assert_switch.go
 
 ---
+
+<a id="toc-7-generics"></a>
 
 ## 7) Generics: type parameters, constraints, and ~underlying types
 
@@ -102,6 +118,8 @@ See: types/007_generics_constraints.go
 
 ---
 
+<a id="toc-8-comparable"></a>
+
 ## 8) comparable, maps/sets, and pitfalls
 
 - Only comparable types are valid map keys
@@ -110,6 +128,8 @@ See: types/007_generics_constraints.go
 See: types/008_comparable_set.go
 
 ---
+
+<a id="toc-9-custom-serialization"></a>
 
 ## 9) Custom serialization for newtypes
 
@@ -149,7 +169,7 @@ See: types/010_json_newtype.go
 
 ---
 
-## 12) Advanced interview questions
+## 12) FAQ
 
 1) Explain defined type vs alias and their impact on method sets
 2) Why do slices of different element types not convert automatically?

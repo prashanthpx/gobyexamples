@@ -1,18 +1,20 @@
 # Go Methods: Advanced Developer Guide
 
 ## Table of Contents
-1. Method Fundamentals (what they are and why they matter)
-2. Receiver Semantics (value vs pointer)
-3. Method Sets and Interface Satisfaction
-4. Method Values vs Method Expressions
-5. Embedding and Promoted Methods
-6. Concurrency and Receiver Design
-7. Common Mistakes and Gotchas
-8. Best Practices
-9. Performance Considerations
-10. Advanced Challenge Questions
+1. [Method Fundamentals (what they are and why they matter)](#toc-1-fundamentals)
+2. [Receiver Semantics (value vs pointer)](#toc-2-receiver-semantics)
+3. [Method Sets and Interface Satisfaction](#toc-3-method-sets)
+4. [Method Values vs Method Expressions](#toc-4-values-vs-exprs)
+5. [Embedding and Promoted Methods](#toc-5-embedding)
+6. [Concurrency and Receiver Design](#toc-6-concurrency)
+7. [Common Mistakes and Gotchas](#toc-7-mistakes)
+8. [Best Practices](#toc-8-best-practices)
+9. [Performance Considerations](#toc-9-performance)
+10. [Advanced Challenge Questions](#toc-10-advanced)
 
 ---
+
+<a id="toc-1-fundamentals"></a>
 
 ## 1) Method Fundamentals (what they are and why they matter)
 
@@ -48,6 +50,8 @@ Why methods matter:
 
 ---
 
+<a id="toc-2-receiver-semantics"></a>
+
 ## 2) Receiver Semantics (value vs pointer)
 
 - Value receiver: method gets a copy of the value
@@ -81,6 +85,8 @@ func main() {
 Edge case: value methods are callable on pointers and vice versa (when addressable), because the compiler implicitly takes/dereferences addresses to make method calls valid.
 
 ---
+
+<a id="toc-3-method-sets"></a>
 
 ## 3) Method Sets and Interface Satisfaction
 
@@ -120,6 +126,8 @@ Takeaway: if any method needs a pointer receiver, prefer using *T consistently w
 
 ---
 
+<a id="toc-4-values-vs-exprs"></a>
+
 ## 4) Method Values vs Method Expressions
 
 - Method value: binds the receiver at the time you take the value
@@ -153,6 +161,8 @@ When to use:
 
 ---
 
+<a id="toc-5-embedding"></a>
+
 ## 5) Embedding and Promoted Methods
 
 Embedding promotes methods into the outer type’s method set (subject to rules of ambiguity).
@@ -180,6 +190,8 @@ Notes:
 - Embedding a *Logger vs Logger changes which methods are promoted onto Service (pointer-receiver methods require *Logger)
 
 ---
+
+<a id="toc-6-concurrency"></a>
 
 ## 6) Concurrency and Receiver Design
 
@@ -212,6 +224,8 @@ func main() {
 
 ---
 
+<a id="toc-7-mistakes"></a>
+
 ## 7) Common Mistakes and Gotchas
 
 1) Expecting T to satisfy interfaces with pointer-receiver methods
@@ -236,6 +250,8 @@ func main() {
 
 ---
 
+<a id="toc-8-best-practices"></a>
+
 ## 8) Best Practices
 
 - Choose receiver type based on semantics (mutate vs read-only) and size
@@ -246,6 +262,8 @@ func main() {
 
 ---
 
+<a id="toc-9-performance"></a>
+
 ## 9) Performance Considerations
 
 - Pointer receivers avoid copying large structs; value receivers can enable better cache locality for small types
@@ -253,6 +271,8 @@ func main() {
 - Method values allocate when captured by closures; consider method expressions when appropriate
 
 ---
+
+<a id="toc-10-advanced"></a>
 
 ## 10) Advanced Challenge Questions
 

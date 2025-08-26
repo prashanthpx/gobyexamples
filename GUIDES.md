@@ -1,8 +1,8 @@
 # Go by Examples and Mistakes — Guides Index
 
-This repository teaches Go with runnable examples, intentional mistakes, and interview‑grade explanations. Each folder has a focused guide that:
+This repository teaches Go with runnable examples, intentional mistakes, and practical explanations. Each folder has a focused guide that:
 - Explains fundamentals and advanced concepts
-- Shows common mistakes and how to fix them (with interview‑ready language)
+- Shows common mistakes and how to fix them
 - Provides best practices and performance notes
 - Keeps all examples compilable and exact
 
@@ -25,6 +25,10 @@ Use this index to jump to the guide for each topic.
 - I/O Readers: [io.reader/IOReaderGuide.md](io.reader/IOReaderGuide.md)
 - Atomics: [atomic/AtomicGuide.md](atomic/AtomicGuide.md)
 
+  - Why lock-free matters: [atomic/AtomicGuide.md#why-lock-free-matters](atomic/AtomicGuide.md#why-lock-free-matters)
+
+  - Jump to Benchmarks: [atomic/AtomicGuide.md#benchmarking](atomic/AtomicGuide.md#benchmarking)
+
 - Goroutines: [goroutine/GoroutinesGuide.md](goroutine/GoroutinesGuide.md)
 - Channels: [channels/ChannelsGuide.md](channels/ChannelsGuide.md)
 - Concurrency Patterns: [wait_group/ConcurrencyGuide.md](wait_group/ConcurrencyGuide.md), [job_queues/JobQueuesGuide.md](job_queues/JobQueuesGuide.md), [worker_queue/WorkerQueuesGuide.md](worker_queue/WorkerQueuesGuide.md)
@@ -39,6 +43,8 @@ Use this index to jump to the guide for each topic.
 - YAML & Encoding: [yaml/YAMLGuide.md](yaml/YAMLGuide.md)
 - Error Handling: [testerrors/ErrorHandlingGuide.md](testerrors/ErrorHandlingGuide.md)
 - Strings: [strings/StringsGuide.md](strings/StringsGuide.md)
+
+- File I/O (files and processing): [fileio/FileIOGuide.md](fileio/FileIOGuide.md)
 
 
 ---

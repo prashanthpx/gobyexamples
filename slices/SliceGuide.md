@@ -3,6 +3,34 @@
 Run these examples
 - Hidden retention fix: go run slices/mistakes/retention.go
 
+
+## Slice syntax refresher
+
+General form: `s[low : high : max]`
+
+- low = starting index (inclusive). Defaults to 0
+- high = ending index (exclusive). Defaults to len(s)
+- max = capacity limit (optional). Defaults to cap(s)
+
+So:
+- s[low:high] → new slice from index low up to (but not including) high
+- s[low:high:max] → also sets capacity = max - low
+
+How to remember
+- Think of [:] as “from : up to (but not including)”
+- Left side (before colon) = where you start
+- Right side (after colon) = where you stop (not included)
+- If omitted, defaults are 0 on the left, len(s) on the right
+
+Examples
+```go
+s := []int{10, 20, 30, 40, 50}
+fmt.Println(s[1:3]) // [20 30]
+fmt.Println(s[:3])  // [10 20 30]
+fmt.Println(s[2:])  // [30 40 50]
+fmt.Println(s[:])   // [10 20 30 40 50]
+```
+
 ## **Slice Basics: Length vs Capacity**
 
 A slice in Go is a lightweight data structure that wraps:
@@ -42,6 +70,38 @@ s = append(s, 4)
 |-----------|---------|---------|
 | `append()` (within cap) | ✅ Increases | ❌ Unchanged |
 | `append()` (exceeds cap) | ✅ Increases | ✅ Increases (often doubles) |
+
+
+### Q: In a slice, if `m2 := make([]int, 10)`, what happens if we add more than 10 elements?
+
+A: Great one — this highlights a classic difference between maps and slices in Go.
+
+- `m2 := make([]int, 10)` creates a slice with length 10 and (by default) capacity 10.
+  - Initially: `len(m2) == 10`, `cap(m2) == 10`
+  - Elements are zero-initialized (0 for int)
+
+You cannot do `m2[10] = 42` (that panics: index out of range). Use `append` instead:
+
+```go
+m2 := make([]int, 10)          // len=10, cap=10
+fmt.Println(len(m2), cap(m2))  // 10 10
+
+m2 = append(m2, 100)           // add one more (11th element)
+fmt.Println(len(m2), cap(m2))  // 11 20  // capacity grew
+```
+
+- On the first append beyond capacity, Go allocates a new backing array with a larger capacity, copies existing elements, then appends the new value
+- Growth pattern: not spec’d but typically doubles for smaller capacities (10 → 20 → 40 → 80 …); for large slices it grows more conservatively (~25%)
+
+Contrast with map
+- `make(map[K]V, 10)` takes a hint; maps can grow to hold unlimited entries
+- `make([]T, n)` sets an actual length; `append` grows by allocating new backing arrays as needed
+
+✅ Summary
+- `make([]int, 10)` gives 10 zeroed elements
+- Appending beyond 10 triggers automatic capacity growth (new array + copy)
+- Capacity usually doubles early, then grows slower for large sizes
+- Direct indexing beyond the current length panics
 
 ## **Appending One Slice to Another**
 

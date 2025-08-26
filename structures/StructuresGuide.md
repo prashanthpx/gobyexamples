@@ -1,22 +1,24 @@
 # Go Structs: Advanced Developer Guide
 
 ## Table of Contents
-1. What Are Structs and Why Use Them
-2. Composition, Embedding, and Inheritance (not!)
-3. Initialization Patterns and Zero Values
-4. Methods on Structs (value vs pointer)
-5. Tags, Encoding/Decoding (JSON/YAML)
-6. Memory Layout, Alignment, and Packing
-7. Equality, Comparability, and Maps/Sets
-8. Common Mistakes and Gotchas
-9. Best Practices
-10. Advanced Challenge Questions
+1. [What Are Structs and Why Use Them](#toc-1-why-structs)
+2. [Composition, Embedding, and Inheritance (not!)](#toc-2-composition-embedding)
+3. [Initialization Patterns and Zero Values](#toc-3-initialization)
+4. [Methods on Structs (value vs pointer)](#toc-4-methods)
+5. [Tags, Encoding/Decoding (JSON/YAML)](#toc-5-tags-encoding)
+6. [Memory Layout, Alignment, and Packing](#toc-6-memory-layout)
+7. [Equality, Comparability, and Maps/Sets](#toc-7-equality)
+8. [Common Mistakes and Gotchas](#toc-8-mistakes)
+9. [Best Practices](#toc-9-best)
+10. [Advanced Challenge Questions](#toc-10-advanced)
 
 
 Run these examples
 - Tag pitfalls (see notes); runnable JSON example: maps/examples/iterate_order.go shows deterministic iteration pattern; for JSON, rely on your own examples directory.
 
 ---
+
+<a id="toc-1-why-structs"></a>
 
 ## 1) What Are Structs and Why Use Them
 
@@ -48,6 +50,8 @@ Why structs matter:
 - Pair naturally with methods, interfaces, and encoding packages
 
 ---
+
+<a id="toc-2-composition-embedding"></a>
 
 ## 2) Composition, Embedding, and Inheritance (not!)
 
@@ -87,6 +91,8 @@ Rules to remember:
 - Embedding a pointer vs a value affects the method set exposed
 
 ---
+
+<a id="toc-3-initialization"></a>
 
 ## 3) Initialization Patterns and Zero Values
 
@@ -130,6 +136,8 @@ _ = NewServer("localhost", 8080, WithTLS(true))
 
 ---
 
+<a id="toc-4-methods"></a>
+
 ## 4) Methods on Structs (value vs pointer)
 
 ```go
@@ -145,6 +153,8 @@ Guidelines:
 - Values can call pointer methods (address-taken) and vice versa when addressable
 
 ---
+
+<a id="toc-5-tags-encoding"></a>
 
 ## 5) Tags, Encoding/Decoding (JSON/YAML)
 
@@ -195,6 +205,8 @@ Common pitfalls:
 
 ---
 
+<a id="toc-6-memory-layout"></a>
+
 ## 6) Memory Layout, Alignment, and Packing
 
 Field order affects padding and size.
@@ -230,6 +242,8 @@ Tips:
 
 ---
 
+<a id="toc-7-equality"></a>
+
 ## 7) Equality, Comparability, and Maps/Sets
 
 - Structs are comparable if all fields are comparable
@@ -247,6 +261,8 @@ Not comparable:
 
 ---
 
+<a id="toc-8-mistakes"></a>
+
 ## 8) Common Mistakes and Gotchas
 
 - Relying on field-order literals: breaks when fields rearranged
@@ -260,6 +276,8 @@ Practice-ready explanation:
 
 ---
 
+<a id="toc-9-best"></a>
+
 ## 9) Best Practices
 
 - Prefer keyed literals for clarity and stability
@@ -269,6 +287,8 @@ Practice-ready explanation:
 - Favor composition/embedding over inheritance; avoid ambiguous promotion
 
 ---
+
+<a id="toc-10-advanced"></a>
 
 ## 10) Advanced Challenge Questions
 

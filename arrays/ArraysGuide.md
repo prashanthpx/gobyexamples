@@ -431,28 +431,31 @@ func arraySizeInType() {
 }
 ```
 
-### **4. Range Loop Variable**
+### **4. Range Loop Variable (Go 1.22 update)**
 ```go
-func rangeLoopGotcha() {
+func rangeLoopPointers() {
     arr := [3]int{1, 2, 3}
-    var pointers []*int
+    var ptrs []*int
 
-    // ❌ Wrong - all pointers point to same variable
+    // Go 1.22+: OK — v is a new variable each iteration
     for _, v := range arr {
-        pointers = append(pointers, &v)
+        ptrs = append(ptrs, &v) // distinct addresses, prints 1 2 3
     }
+    for _, p := range ptrs { fmt.Println(*p) }
 
-    for _, p := range pointers {
-        fmt.Println(*p) // Prints 3, 3, 3
+    // If you need pointers to the original elements (not the loop var copies):
+    ptrs = ptrs[:0]
+    for i := range arr {
+        ptrs = append(ptrs, &arr[i]) // address of the actual element
     }
-
-    // ✅ Correct - create new variable
-    for _, v := range arr {
-        v := v // Create new variable
-        pointers = append(pointers, &v)
-    }
+    for _, p := range ptrs { fmt.Println(*p) }
 }
 ```
+Notes
+- Go ≤1.21 behavior: the loop variable v was reused each iteration; taking &v produced identical addresses, yielding 3 3 3. The common workaround was `v := v` inside the loop.
+- Go 1.22+: the iteration variables declared by `range` are new each iteration, so `&v` now points to a distinct variable and prints 1 2 3.
+- When you need pointers to the underlying array/slice elements, prefer `&arr[i]` even on Go 1.22+.
+
 
 ### **5. Zero Value Confusion**
 ```go
@@ -546,11 +549,12 @@ weekdays := [...]string{
 
 ### **1. Memory Locality**
 ```go
-// ✅ Good cache locality - contiguous memory
+// ✅ Good cache locality — iterate in index order so reads are contiguous
+// Note: arr is passed by value (copies 1000 ints). For large arrays, prefer *[N]int.
 func sumArray(arr [1000]int) int {
     sum := 0
     for _, v := range arr {
-        sum += v // Sequential memory access
+        sum += v // forward, contiguous reads are cache‑friendly
     }
     return sum
 }

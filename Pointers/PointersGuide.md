@@ -262,15 +262,57 @@ func (c *Counter) Increment() {
     c.count++
 }
 
-func receiverExample() {
-    c := Counter{0}
-    c.Increment()           // Works - Go takes address automatically
-    fmt.Println(c.count)    // 1
-
-    p := &Counter{0}
-    p.Increment()           // Works
-    fmt.Println(p.GetCount()) // Works - Go dereferences automatically
+// Value receiver - operates on copy (changes don't persist)
+func (c Counter) Incr() {
+    c.count += 5  // modifies the copy, not the original
 }
+
+func receiverExample() {
+    // Value calling pointer method: Go automatically takes address
+    c := Counter{0}
+    c.Increment()           // Go converts to (&c).Increment()
+    fmt.Println(c.count)    // 1 - original modified via pointer
+    c.Increment()           // Go converts to (&c).Increment() again
+    fmt.Println(c.count)    // 2 - original modified again
+
+    // Pointer calling value method: Go automatically dereferences
+    p := &Counter{0}
+    p.Increment()           // pointer method works directly
+    fmt.Println(p.GetCount()) // Go converts to (*p).GetCount() → 1
+
+    // Value receiver: operates on copy, no automatic conversion helps
+    c1 := Counter{0}
+    c1.Incr()               // operates on copy of c1
+    fmt.Println(c1.count)   // 0 - original unchanged
+    c1.Incr()               // operates on copy again
+    fmt.Println(c1.count)   // 0 - still unchanged
+    fmt.Println(c1.GetCount()) // 0
+}
+
+### **Go's Automatic Address-Taking and Dereferencing**
+
+Go provides syntactic sugar that automatically converts between values and pointers when calling methods:
+
+```go
+// Manual vs automatic conversions
+func conversionExamples() {
+    c := Counter{0}
+    p := &Counter{0}
+
+    // These pairs are equivalent:
+    c.Increment()    // automatic: Go does (&c).Increment()
+    (&c).Increment() // manual: explicit address-taking
+
+    p.GetCount()     // automatic: Go does (*p).GetCount()
+    (*p).GetCount()  // manual: explicit dereferencing
+}
+```
+
+**Key insight**: You can call any method on any compatible type. Go handles the conversion automatically, making the API more ergonomic.
+
+**Important**: This automatic conversion only applies to method calls, not to the method's behavior:
+- Pointer receiver methods can modify the original (because they receive a pointer)
+- Value receiver methods operate on copies (even if Go took the address to call them)
 ```
 
 ### **Method Set Rules**
@@ -302,6 +344,10 @@ func methodSets() {
     // i = t  // ❌ T doesn't satisfy (missing PointerMethod)
 }
 ```
+
+
+> See also
+> - Channels as references and when (rarely) to use `*chan`: channels/ChannelsGuide.md#13-channels-as-reference-types-and-when-to-use-chan
 
 ### **When to Use Pointer Receivers**
 ```go

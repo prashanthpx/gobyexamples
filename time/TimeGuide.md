@@ -1,17 +1,19 @@
 # Time in Go: Advanced Developer Guide
 
 ## Table of Contents
-1. time.Time and Monotonic Clock
-2. Timers vs Tickers vs time.After
-3. Stopping and Resetting Timers/Tickers
-4. Timezones, Locations, and Parsing
-5. Deadlines and Context Integration
-6. Common Mistakes and Gotchas
-7. Best Practices
-8. Performance Considerations
-9. Advanced Challenge Questions
+1. [time.Time and Monotonic Clock](#toc-1-monotonic)
+2. [Timers vs Tickers vs time.After](#toc-2-timers-tickers)
+3. [Stopping and Resetting Timers/Tickers](#toc-3-stop-reset)
+4. [Timezones, Locations, and Parsing](#toc-4-timezones)
+5. [Deadlines and Context Integration](#toc-5-deadlines)
+6. [Common Mistakes and Gotchas](#toc-6-mistakes)
+7. [Best Practices](#toc-7-best)
+8. [Performance Considerations](#toc-8-performance)
+9. [Advanced Challenge Questions](#toc-9-advanced)
 
 ---
+
+<a id="toc-1-monotonic"></a>
 
 ## 1) time.Time and Monotonic Clock
 
@@ -30,6 +32,8 @@ _ = u.Sub(start) // wall clock arithmetic
 ```
 
 ---
+
+<a id="toc-2-timers-tickers"></a>
 
 ## 2) Timers vs Tickers vs time.After
 
@@ -50,6 +54,8 @@ for i := 0; i < 3; i++ { <-tick.C }
 Avoid time.After in loops; reuse Timer or Ticker instead to prevent allocations/leaks.
 
 ---
+
+<a id="toc-3-stop-reset"></a>
 
 ## 3) Stopping and Resetting Timers/Tickers
 
@@ -72,6 +78,8 @@ defer k.Stop() // prevent leak
 ```
 
 ---
+
+<a id="toc-4-timezones"></a>
 
 ## 4) Timezones, Locations, and Parsing
 
@@ -111,6 +119,8 @@ Notes:
 
 ---
 
+<a id="toc-5-deadlines"></a>
+
 ## 5) Deadlines and Context Integration
 
 ```go
@@ -126,6 +136,8 @@ case <-time.After(50*time.Millisecond):
 Prefer context deadlines for request-scoped operations; derive timeouts rather than hardcoding sleeps.
 
 ---
+
+<a id="toc-6-mistakes"></a>
 
 ## 6) Common Mistakes and Gotchas
 
@@ -162,6 +174,8 @@ start := time.Now(); defer func(){ fmt.Println(time.Since(start)) }()
 
 ---
 
+<a id="toc-7-best"></a>
+
 ## 7) Best Practices
 
 - Prefer monotonic durations for measuring time (time.Since)
@@ -171,6 +185,8 @@ start := time.Now(); defer func(){ fmt.Println(time.Since(start)) }()
 
 ---
 
+<a id="toc-8-performance"></a>
+
 ## 8) Performance Considerations
 
 - Allocation: time.After allocates per call; prefer reusable Timer/Ticker in loops
@@ -178,6 +194,8 @@ start := time.Now(); defer func(){ fmt.Println(time.Since(start)) }()
 - Reuse buffers when formatting times with AppendFormat
 
 ---
+
+<a id="toc-9-advanced"></a>
 
 ## 9) Advanced Challenge Questions
 

@@ -18,19 +18,22 @@ Run these examples
 ---
 
 ## Table of Contents
-1. Reader family overview (mental model)
-2. bytes.Reader vs strings.Reader vs bytes.Buffer
-3. io.SectionReader (fixed window), io.LimitReader, io.TeeReader
-4. io.Copy, MultiReader/MultiWriter, Pipe
-5. ReaderAt, Seeker, and cursor semantics
-6. Choosing the right abstraction (cheat sheet)
-7. Common mistakes and gotchas
-8. Best practices and performance notes
-9. Advanced interview questions
-10. Interview-ready advantages of Readers
-11. “File-like” usage of bytes.Reader and limitations
+1. [Reader family overview (mental model)](#toc-1-overview)
+2. [bytes.Reader vs strings.Reader vs bytes.Buffer](#toc-2-bytes-strings-buffer)
+3. [io.SectionReader (fixed window), io.LimitReader, io.TeeReader](#toc-3-section-limit-tee)
+4. [io.Copy, MultiReader/MultiWriter, Pipe](#toc-4-copy-multi-pipe)
+5. [ReaderAt, Seeker, and cursor semantics](#toc-5-readerat-seeker)
+6. [Choosing the right abstraction (cheat sheet)](#toc-6-choose)
+7. [Common mistakes and gotchas](#toc-7-mistakes)
+8. [Best practices and performance notes](#toc-8-best)
+9. [FAQ](#toc-9-advanced)
+10. [Advantages of Readers](#toc-10-advantages)
+11. [“File-like” usage of bytes.Reader and limitations](#toc-11-file-like)
+
 
 ---
+
+<a id="toc-1-overview"></a>
 
 ## 1) Reader family overview (mental model)
 
@@ -48,6 +51,8 @@ Create Readers from different sources:
 
 ---
 
+<a id="toc-2-bytes-strings-buffer"></a>
+
 ## 2) bytes.Reader vs strings.Reader vs bytes.Buffer
 
 - bytes.Reader: read-only view over []byte with Seeker, ReaderAt, Byte/Rune scanners. Lightweight; perfect when you already have bytes
@@ -57,6 +62,8 @@ Create Readers from different sources:
 See: io.reader/001_bytes_reader_basic.go, 002_strings_reader_basic.go, 003_buffer_vs_reader.go
 
 ---
+
+<a id="toc-3-section-limit-tee"></a>
 
 ## 3) io.SectionReader, io.LimitReader, io.TeeReader
 
@@ -68,6 +75,8 @@ See: io.reader/004_section_reader.go, 005_limit_tee_multi.go
 
 ---
 
+<a id="toc-4-copy-multi-pipe"></a>
+
 ## 4) io.Copy, MultiReader/MultiWriter, Pipe
 
 - io.Copy(dst, src) efficiently copies until EOF (uses specialized interfaces when available)
@@ -78,6 +87,8 @@ See: io.reader/005_limit_tee_multi.go, 006_copy.go, 007_pipe.go
 
 ---
 
+<a id="toc-5-readerat-seeker"></a>
+
 ## 5) ReaderAt vs Seeker and cursor semantics
 
 - ReaderAt reads at offsets without mutating the current position; safe for concurrent reads
@@ -87,6 +98,8 @@ See: io.reader/005_limit_tee_multi.go, 006_copy.go, 007_pipe.go
 See: io.reader/009_reader_at_vs_seek.go, 004_section_reader.go
 
 ---
+
+<a id="toc-6-choose"></a>
 
 ## 6) Choosing the right abstraction (cheat sheet)
 
@@ -100,6 +113,8 @@ See: io.reader/009_reader_at_vs_seek.go, 004_section_reader.go
 - Need to stream between goroutines → io.Pipe
 
 ---
+
+<a id="toc-7-mistakes"></a>
 
 ## 7) Common mistakes and gotchas
 
@@ -123,6 +138,8 @@ See: io.reader/009_reader_at_vs_seek.go, 004_section_reader.go
 
 ---
 
+<a id="toc-8-best"></a>
+
 ## 8) Best practices and performance notes
 
 - Prefer io.Copy/CopyN over manual loops when appropriate; they use optimized paths
@@ -133,9 +150,11 @@ See: io.reader/009_reader_at_vs_seek.go, 004_section_reader.go
 
 ---
 
-## 9) Advanced interview questions
+<a id="toc-9-advanced"></a>
 
-Bonus: interview-ready points about bytes.Reader and “file-like” usage
+## 9) FAQ
+
+Common questions about bytes.Reader and “file-like” usage
 - See runnable: io.reader/014_binary_read_example.go
 
 
@@ -149,6 +168,8 @@ Bonus: interview-ready points about bytes.Reader and “file-like” usage
 
 
 
+
+<a id="toc-10-advantages"></a>
 
 ## 10) Interview-ready advantages of Readers (bytes.Reader in focus)
 
@@ -186,6 +207,8 @@ Bonus: interview-ready points about bytes.Reader and “file-like” usage
 See also runnable examples in this folder; for binary.Read demo, run: go run io.reader/014_binary_read_example.go
 
 ---
+
+<a id="toc-11-file-like"></a>
 
 ## 11) “File-like” usage of bytes.Reader and limitations
 

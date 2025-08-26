@@ -1,20 +1,22 @@
 # Go Operators: Advanced Developer Guide
 
 ## Table of Contents
-1. Operator Overview and Precedence
-2. Arithmetic, Assignment, and Increment/Decrement
-3. Comparison and Equality (values vs references)
-4. Logical Operators and Short-Circuiting
-5. Bitwise and Shift Operators (with signed/unsigned notes)
-6. Address-of, Dereference, Indexing, Slicing
-7. Map/Channel Operators (comma-ok, send/recv)
-8. Type Conversion vs Casting (there’s no cast)
-9. Comparability Rules (structs, arrays, slices, maps)
-10. Common Mistakes and Gotchas
-11. Best Practices
-12. Advanced Challenge Questions
+1. [Operator Overview and Precedence](#toc-1-overview)
+2. [Arithmetic, Assignment, and Increment/Decrement](#toc-2-arithmetic)
+3. [Comparison and Equality (values vs references)](#toc-3-comparison)
+4. [Logical Operators and Short-Circuiting](#toc-4-logical)
+5. [Bitwise and Shift Operators (with signed/unsigned notes)](#toc-5-bitwise)
+6. [Address-of, Dereference, Indexing, Slicing](#toc-6-address-indexing)
+7. [Map/Channel Operators (comma-ok, send/recv)](#toc-7-map-channel)
+8. [Type Conversion vs Casting (there’s no cast)](#toc-8-conversion)
+9. [Comparability Rules (structs, arrays, slices, maps)](#toc-9-comparability)
+10. [Common Mistakes and Gotchas](#toc-10-mistakes)
+11. [Best Practices](#toc-11-best)
+12. [Advanced Challenge Questions](#toc-12-advanced)
 
 ---
+
+<a id="toc-1-overview"></a>
 
 ## 1) Operator Overview and Precedence
 
@@ -29,6 +31,8 @@ From high to low (simplified):
 Parentheses `()` override precedence. Use them for clarity.
 
 ---
+
+<a id="toc-2-arithmetic"></a>
 
 ## 2) Arithmetic, Assignment, and Increment/Decrement
 
@@ -55,6 +59,8 @@ Notes:
 - `++` and `--` can’t be used in expressions
 
 ---
+
+<a id="toc-3-comparison"></a>
 
 ## 3) Comparison and Equality (values vs references)
 
@@ -87,6 +93,8 @@ Notes:
 
 ---
 
+<a id="toc-4-logical"></a>
+
 ## 4) Logical Operators and Short-Circuiting
 
 ```go
@@ -105,6 +113,8 @@ func main() {
 Use short-circuiting to guard expensive or unsafe operations.
 
 ---
+
+<a id="toc-5-bitwise"></a>
 
 ## 5) Bitwise and Shift Operators (with signed/unsigned notes)
 
@@ -134,6 +144,8 @@ Notes:
 
 ---
 
+<a id="toc-6-address-indexing"></a>
+
 ## 6) Address-of, Dereference, Indexing, Slicing
 
 ```go
@@ -155,7 +167,102 @@ func main() {
 
 ---
 
+<a id="toc-7-map-channel"></a>
+
 ## 7) Map/Channel Operators (comma-ok, send/recv)
+
+### Map Declaration and Initialization
+
+#### 1. Declaring with just the type
+```go
+var m map[string]string
+```
+
+This declares a nil map variable.
+- `m` is of type `map[string]string`, but the value is `nil`
+- You can read from it safely (returns the zero value for the value type)
+- But you cannot write (insert/update), it will panic:
+
+```go
+fmt.Println(m == nil)       // true
+fmt.Println(m["foo"])       // "" (zero value of string)
+m["foo"] = "bar"            // panic: assignment to entry in nil map
+```
+
+#### 2. Declaring with make
+```go
+m := make(map[string]string)
+```
+
+This creates and initializes an empty but usable map.
+
+Now you can both read and write:
+```go
+fmt.Println(m == nil)   // false
+m["foo"] = "bar"        // works fine
+fmt.Println(m["foo"])   // "bar"
+```
+
+#### 3. Why the difference?
+
+A map type (`map[string]string`) is a reference type.
+- Just declaring `var m map[...]...` gives you a nil reference
+- You need `make` (or a literal like `map[string]string{"foo":"bar"}`) to allocate the underlying map header and buckets
+
+This is very much like slices:
+- `var s []int` → nil slice (len=0, cap=0)
+- `make([]int, 0)` → empty slice with underlying array allocated (len=0, cap=0 but usable)
+
+#### 4. Quick comparison table
+
+| Form | Example | Usable for reads? | Usable for writes? | Is nil? |
+|------|---------|-------------------|-------------------|---------|
+| `var m map[K]V` | `var m map[string]string` | ✅ returns zero value | ❌ panics | ✅ |
+| `make(map[K]V)` | `make(map[string]string)` | ✅ | ✅ | ❌ |
+| Map literal | `map[string]string{"k":"v"}` | ✅ | ✅ | ❌ |
+
+### Channel Buffering
+
+#### make(chan int, N) in Go
+
+The first argument is the channel's element type (`int` here).
+The second argument is the channel's buffer capacity (`N`).
+
+So:
+- `make(chan int)` → creates an unbuffered channel (capacity = 0)
+- `make(chan int, 1)` → creates a buffered channel with capacity = 1
+- `make(chan int, 2)` → creates a buffered channel with capacity = 2
+
+#### What buffering means
+
+- Capacity = 1 → at most one value can sit in the channel without being received
+- Capacity = 2 → at most two values can sit in the channel before a sender blocks
+
+Example:
+```go
+ch := make(chan int, 2)
+
+ch <- 10   // ✅ doesn't block
+ch <- 20   // ✅ doesn't block
+
+// At this point, the buffer is full.
+// Next send would block until someone receives.
+go func() {
+    ch <- 30 // this will block until a receiver takes one out
+}()
+fmt.Println(<-ch) // 10
+fmt.Println(<-ch) // 20
+fmt.Println(<-ch) // 30
+```
+
+#### Key rules
+
+- `cap(ch)` → returns the buffer capacity
+- `len(ch)` → returns the current number of elements waiting in the buffer
+- If the buffer is full, a sender blocks until space is freed
+- If the buffer is empty, a receiver blocks until a value is sent
+
+### Map and Channel Operations
 
 ```go
 package main
@@ -176,6 +283,8 @@ func main() {
 ```
 
 ---
+
+<a id="toc-8-conversion"></a>
 
 ## 8) Type Conversion vs Casting (there’s no cast)
 
@@ -201,6 +310,8 @@ Notes:
 
 ---
 
+<a id="toc-9-comparability"></a>
+
 ## 9) Comparability Rules (structs, arrays, slices, maps)
 
 - Comparable: booleans, numbers, strings, pointers, channels, arrays, structs (if all fields comparable)
@@ -208,6 +319,8 @@ Notes:
 - Use `reflect.DeepEqual` only for tests/tools; not on hot paths
 
 ---
+
+<a id="toc-10-mistakes"></a>
 
 ## 10) Common Mistakes and Gotchas
 
@@ -240,6 +353,8 @@ Notes:
 
 ---
 
+<a id="toc-11-best"></a>
+
 ## 11) Best Practices
 
 - Use parentheses for clarity in complex expressions
@@ -249,6 +364,8 @@ Notes:
 - Avoid DeepEqual in production logic; write domain-specific equality
 
 ---
+
+<a id="toc-12-advanced"></a>
 
 ## 12) Advanced Challenge Questions
 
