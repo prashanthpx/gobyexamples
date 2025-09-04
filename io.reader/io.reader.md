@@ -135,7 +135,7 @@ strings.Reader → same as bytes.Reader but works with string instead of []byte.
 ✅ In short:
 Use *bytes.Reader when you want to treat a byte slice as a file-like, read-only stream with seek support. It’s extremely useful when working with APIs that consume io.Reader or io.Seeker, like HTTP, file parsers, encoders/decoders, and tests.
 
-👉 Do you want me to also show you a real-world example of parsing a binary file format (say, reading PNG headers) using bytes.Reader? That’s a classic interview-level use case.
+👉 Do you want me to also show you a real-world example of parsing a binary file format (say, reading PNG headers) using bytes.Reader? That’s a common real-world use case.
 
 You said:
 yes proceed with the same

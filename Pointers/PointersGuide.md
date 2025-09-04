@@ -21,7 +21,7 @@ Run these examples
 
 ---
 
-> Overview: Pointers are core to Go’s performance and API design. This guide layers practical explanations on top of runnable examples to build an intuition you can apply in real systems and interviews. Where C/C++ allow arbitrary pointer arithmetic, Go deliberately restricts it for safety while still giving you low-level control when needed.
+> Overview: Pointers are core to Go’s performance and API design. This guide layers practical explanations on top of runnable examples to build an intuition you can apply in real systems. Where C/C++ allow arbitrary pointer arithmetic, Go deliberately restricts it for safety while still giving you low-level control when needed.
 
 
 

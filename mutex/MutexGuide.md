@@ -24,7 +24,7 @@ Run these examples
 9. [Embedding Mutexes in Types (API design)](#toc-9-embedding)
 10. [Common Mistakes and Gotchas](#toc-10-mistakes)
 11. [Best Practices](#toc-11-best)
-12. [Advanced Interview Questions](#toc-12-advanced)
+12. [FAQ](#toc-12-advanced)
 13. [Cheat-sheet (quick reminders)](#toc-13-cheatsheet)
 
 ---
@@ -183,7 +183,7 @@ Defer vs explicit Unlock
 
 <a id="toc-12-advanced"></a>
 
-## 12) Advanced Interview Questions
+## 12) FAQ
 
 1) Explain when RWMutex outperforms Mutex and when it underperforms
 - Reads must dominate, read sections short; otherwise contention hurts
