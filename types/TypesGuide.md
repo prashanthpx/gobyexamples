@@ -42,6 +42,8 @@ Run these examples
 - Strings are immutable; zero value ""
 
 See: types/001_basic_types.go
+- See deeper discussion on runes and iteration: [Strings guide section](../strings/StringsGuide.md#runes-range-semantics)
+
 
 ---
 

@@ -498,22 +498,74 @@ func returnLocal() *int {
 func loopCapture() {
     var pointers []*int
 
-    // ❌ Wrong - all pointers point to same variable
+    // ❌ Wrong: address of the loop variable i (same variable reused each iteration)
     for i := 0; i < 3; i++ {
         pointers = append(pointers, &i)
     }
 
     for _, p := range pointers {
-        fmt.Println(*p) // Prints 3, 3, 3
+        // NOTE: Behavior is not specified; compilers may allocate new storage per iteration
+        // or reuse the same variable. You might see 3 3 3 (same address each time) OR 0 1 2
+        // (distinct addresses). Do not rely on taking &i.
+        fmt.Println(*p)
     }
 
-    // ✅ Correct
+    // ✅ Correct 1: create a new variable each iteration (shadow i)
+    var fix1 []*int
     for i := 0; i < 3; i++ {
-        i := i // Create new variable
-        pointers = append(pointers, &i)
+        i := i // new variable with same name
+        fix1 = append(fix1, &i)
+    }
+    for _, p := range fix1 { fmt.Println(*p) } // 0 1 2
+
+    // ✅ Correct 2: allocate a fresh int each time
+    var fix2 []*int
+    for i := 0; i < 3; i++ {
+        n := new(int)
+        *n = i
+        fix2 = append(fix2, n)
+    }
+
+    // ✅ Correct 3: take addresses of elements in a backing slice/array
+    vals := []int{0, 1, 2}
+    var fix3 []*int
+    for i := range vals {
+        fix3 = append(fix3, &vals[i])
     }
 }
 ```
+
+Range loop has the same pitfall (range variable is reused)
+```go
+func rangeCapture() {
+    vals := []int{10, 20, 30}
+    var ps []*int
+
+    // ❌ Wrong: &v takes address of the reused range variable v
+    for _, v := range vals {
+        ps = append(ps, &v)
+    }
+    for _, p := range ps { fmt.Println(*p) } // 30 30 30
+
+    // ✅ Correct: take address of the element via index
+    ps = nil
+    for i := range vals {
+        ps = append(ps, &vals[i])
+    }
+
+    // ✅ Or shadow v to create a distinct variable per iteration
+    ps = nil
+    for _, v := range vals {
+        v := v
+        ps = append(ps, &v)
+    }
+}
+```
+
+Why this happens
+- In both for and range, the loop variable (i or v) is a single variable reused each iteration; &i / &v is the same address every time
+- After the first loop completes, i == 3; dereferencing all stored &i pointers yields 3
+- Fix by introducing a new variable per iteration, allocating a new int, or by taking the address of the underlying slice/array element
 
 ### **3. Slice Pointer Confusion**
 ```go

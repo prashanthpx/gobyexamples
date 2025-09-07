@@ -10,6 +10,8 @@
 7. [Iteration and Ordering](#iteration-and-ordering)
 8. [Common Mistakes and Gotchas](#common-mistakes-and-gotchas)
 9. [Best Practices](#best-practices)
+    - Two-Value Patterns Cheat Sheet (comma-ok and range) — see Operators guide: [link](../Operators/OperatorsGuide.md#toc-7-2value)
+
 10. [Performance Characteristics](#performance-characteristics)
 11. [Advanced Challenge Questions](#advanced-challenge-questions)
 

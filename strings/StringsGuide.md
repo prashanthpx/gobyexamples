@@ -1,17 +1,30 @@
 # Strings, Runes, and Bytes in Go: Advanced Developer Guide
 
 ## Table of Contents
-1. Strings Are Immutable
-2. Bytes vs Runes (UTF‑8)
-3. Indexing, Iteration, and Unicode
-4. Conversions and Allocations
-5. Building Strings Efficiently
-6. Common Mistakes and Gotchas
-7. Best Practices
-8. Performance Considerations
-9. Advanced Challenge Questions
+1. [Strings Are Immutable](#toc-1-immutable)
+2. [Bytes vs Runes (UTF‑8)](#toc-2-bytes-runes)
+3. [Indexing, Iteration, and Unicode](#toc-3-indexing-iteration)
+4. [Conversions and Allocations](#toc-4-conversions)
+5. [Building Strings Efficiently](#toc-5-building)
+6. [Common Mistakes and Gotchas](#toc-6-mistakes)
+7. [Best Practices](#toc-7-best)
+8. [Performance Considerations](#toc-8-perf)
+9. [Advanced Challenge Questions](#toc-9-advanced)
+Run these examples
+- café iteration: go run strings/examples/cafe_iter.go
+- emoji iteration: go run strings/examples/emoji_iter.go
+- grapheme clusters: go run strings/examples/grapheme_demo.go
+
+- invalid UTF-8 handling: go run strings/examples/invalid_utf8.go
+
+- clean invalid UTF-8 bytes: go run strings/examples/clean_invalid_utf8.go
 
 ---
+
+
+---
+
+<a id="toc-1-immutable"></a>
 
 ## 1) Strings Are Immutable
 
@@ -24,6 +37,8 @@ _ = s2
 ```
 
 ---
+
+<a id="toc-2-bytes-runes"></a>
 
 ## 2) Bytes vs Runes (UTF‑8)
 
@@ -41,6 +56,8 @@ fmt.Println(len([]rune(x))) // 1 rune
 ```
 
 ---
+
+<a id="toc-3-indexing-iteration"></a>
 
 ## 3) Indexing, Iteration, and Unicode
 
@@ -69,7 +86,89 @@ for i, r := range s { fmt.Println(i, string(r)) } // 0 "é" 2 "a"
 
 Use utf8.DecodeRune to walk bytes safely.
 
+
+<a id="runes-range-semantics"></a>
+
+### Runes and range over strings: index and value semantics
+
+What is a rune?
+- In Go, a rune is just an alias for int32.
+- It represents a single Unicode code point (e.g., 'A' = U+0041, 'é' = U+00E9, '猫' = U+732B).
+- A string in Go is a read-only sequence of bytes (UTF-8 encoded). One rune may take 1–4 bytes in UTF-8.
+
+What does range over a string return?
+- for i, r := range s { ... }
+  - i = byte index (offset) of the start of this rune within the UTF-8 byte sequence
+  - r = the rune (Unicode code point) decoded at that position
+- “Byte index (start of rune)” means: if the current rune begins at byte 3 of the string’s underlying bytes, then i == 3.
+
+Why not “character index”?
+- Because Go strings are bytes. UTF-8 encodes some runes with multiple bytes, so the index that range gives you is a byte offset, not a “rune count” or “character position.”
+
+Mini examples
+
+ASCII vs non-ASCII
+```go
+s := "café" // bytes: [63 61 66 C3 A9]
+fmt.Println(len(s))                    // 5 bytes
+fmt.Println(utf8.RuneCountInString(s)) // 4 runes
+
+for i, r := range s {
+    fmt.Printf("i=%d  r=%U %q\n", i, r, r)
+}
+// i=0  r=U+0063 "c"
+// i=1  r=U+0061 "a"
+// i=2  r=U+0066 "f"
+// i=3  r=U+00E9 "é"   <-- note i=3 (start byte of 'é')
+```
+
+Emoji / multiple runes
+```go
+s := "👋🏽" // waving hand + skin tone modifier (two runes)
+for i, r := range s {
+    fmt.Printf("i=%d  r=%U %q\n", i, r, r)
+}
+// i=0  r=U+1F44B "👋"
+// i=4  r=U+1F3FD "🏽"
+// (each rune uses multiple bytes; second starts at byte index 4)
+```
+
+Bytes vs runes vs strings (at a glance)
+- byte = alias for uint8. One raw byte. []byte(s) gives the UTF-8 bytes of s.
+- rune = int32 Unicode code point. []rune(s) converts to runes (decodes UTF-8).
+- string = read-only UTF-8 byte sequence.
+
+Common operations
+- Count runes: utf8.RuneCountInString(s)
+- Iterate runes: for i, r := range s { ... }
+- Handling invalid UTF-8: range yields utf8.RuneError (U+FFFD) for invalid sequences; width still advances. See example: strings/examples/invalid_utf8.go
+
+- Index by rune position (not byte): convert first → rs := []rune(s); fmt.Println(rs[3])
+
+Cleaning invalid UTF-8
+- When ingesting untrusted/external data, sanitize first so downstream code doesn’t see invalid sequences.
+- Use bytes.ToValidUTF8 to replace invalid bytes with a replacement of your choice (e.g., "?").
+
+Example
+```go
+cleaned := bytes.ToValidUTF8([]byte(s), []byte("?"))
+safe := string(cleaned)
+```
+See runnable: strings/examples/clean_invalid_utf8.go
+
+Warning
+- bytes.ToValidUTF8 alters the data; if exact fidelity matters, prefer rejecting/quarantining the input or logging and failing fast instead of silently rewriting bytes.
+- When sanitizing, consider retaining the original raw []byte alongside the cleaned string for audit/debug purposes, and document that replacement characters may appear.
+
+
+- Get next rune from a byte offset: r, size := utf8.DecodeRuneInString(s[i:])
+
+Gotcha: user-visible “characters”
+- A single user-perceived character can be multiple runes (e.g., “🇮🇳” flag, emoji + skin tone, letters + combining accents). If you need to iterate what users see as characters (grapheme clusters), use a grapheme segmenter (e.g., golang.org/x/text/segment), not plain runes.
+
 ---
+
+<a id="toc-4-conversions"></a>
 
 ## 4) Conversions and Allocations
 
@@ -95,6 +194,8 @@ _ = bb
 
 ---
 
+<a id="toc-5-building"></a>
+
 ## 5) Building Strings Efficiently
 
 Prefer strings.Builder or bytes.Buffer for incremental construction.
@@ -109,6 +210,8 @@ s := b.String() // single allocation
 For bytes: use bytes.Buffer and convert once at the end.
 
 ---
+
+<a id="toc-6-mistakes"></a>
 
 ## 6) Common Mistakes and Gotchas
 
@@ -139,6 +242,8 @@ For bytes: use bytes.Buffer and convert once at the end.
 
 ---
 
+<a id="toc-7-best"></a>
+
 ## 7) Best Practices
 
 - Choose []byte for I/O and mutation; string for stable text
@@ -148,6 +253,8 @@ For bytes: use bytes.Buffer and convert once at the end.
 
 ---
 
+<a id="toc-8-perf"></a>
+
 ## 8) Performance Considerations
 
 - Conversions allocate; measure and minimize in hot paths
@@ -155,6 +262,8 @@ For bytes: use bytes.Buffer and convert once at the end.
 - Avoid per-iteration Sprintf; write directly to a Buffer/Builder
 
 ---
+
+<a id="toc-9-advanced"></a>
 
 ## 9) Advanced Challenge Questions
 

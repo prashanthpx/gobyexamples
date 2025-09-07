@@ -14,6 +14,8 @@
 11. [Performance Considerations](#toc-11-performance)
 12. [Advanced Challenge Questions](#toc-12-advanced-questions)
 13. [Channels as Reference Types and When to Use *chan](#toc-13-channel-ref-and-ptr)
+14. Two-Value Patterns Cheat Sheet (comma-ok and range) — see Operators guide: [link](../Operators/OperatorsGuide.md#toc-7-2value)
+
 
 Run these examples
 - Directional API: go run channels/examples/directional.go

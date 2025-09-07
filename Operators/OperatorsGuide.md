@@ -8,6 +8,7 @@
 5. [Bitwise and Shift Operators (with signed/unsigned notes)](#toc-5-bitwise)
 6. [Address-of, Dereference, Indexing, Slicing](#toc-6-address-indexing)
 7. [Map/Channel Operators (comma-ok, send/recv)](#toc-7-map-channel)
+   - [Two-Value Patterns Cheat Sheet](#toc-7-2value)
 8. [Type Conversion vs Casting (there’s no cast)](#toc-8-conversion)
 9. [Comparability Rules (structs, arrays, slices, maps)](#toc-9-comparability)
 10. [Common Mistakes and Gotchas](#toc-10-mistakes)
@@ -330,6 +331,81 @@ func main() {
   fmt.Println(v, ok)
 }
 ```
+
+<a id="toc-7-2value"></a>
+
+### Two-Value Patterns Cheat Sheet
+
+Memorize the two big patterns: comma-ok (single operation) and range (iteration). Mnemonics and examples included.
+
+1) The comma-ok result (single operation)
+Pattern: (value, ok) — “the thing you asked for, and whether it worked.”
+
+```go
+// Map lookup
+v, ok := m[key] // value, key existed?
+
+// Type assertion
+n, ok := x.(int) // value as int, assertion ok?
+
+// Channel receive
+msg, ok := <-ch // element, channel still open?
+```
+
+Mnemonic: comma-ok returns the value first (never the key/index).
+
+2) The range iteration pair
+Pattern: (position, value) — position is index for sequences, key for maps. Channel yields only the value.
+
+Targets and variables
+- slice / array: index (int), element value
+- string: byte index (start of rune), rune (Unicode code point)
+- map: key, value
+- channel: value only (single variable)
+
+```go
+for i, v := range s { // i=index, v=element
+    _ = i; _ = v
+}
+
+
+See also: Strings guide on runes and range index/value semantics: [link](../strings/StringsGuide.md#runes-range-semantics)
+
+for k, v := range m { // k=key, v=value
+    _ = k; _ = v
+}
+
+for i, r := range "café" { // i=byte offset, r=rune
+    _ = i; _ = r
+}
+
+for v := range ch { // channel yields only the value
+    _ = v
+}
+```
+
+3) Ignoring values with underscore
+```go
+_, ok := m[key]      // only need existence
+for _, v := range s { // ignore index
+    _ = v
+}
+for k := range m {   // only keys
+    _ = k
+}
+```
+
+4) Gotchas & tips
+- Map iteration order is intentionally random; do not rely on it.
+- Ranging a nil slice or nil map is safe and yields zero iterations.
+- Ranging a nil channel blocks forever; always initialize channels before ranging.
+- Ranging over a string iterates runes (UTF-8 code points), not bytes. Index is the byte offset.
+- The comma-ok pattern is also used for: type assertions and channel receives (same semantics: (value, ok)).
+
+One-liners to remember
+- comma-ok: value, then ok
+- range: position, then value (except channel → only value)
+
 
 ---
 
