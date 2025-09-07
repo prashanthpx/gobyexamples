@@ -44,6 +44,8 @@ Use this index to jump to the guide for each topic.
 - Error Handling: [testerrors/ErrorHandlingGuide.md](testerrors/ErrorHandlingGuide.md)
 - Strings: [strings/StringsGuide.md](strings/StringsGuide.md)
 
+- Linked Lists: [linkedlist/LinkedListGuide.md](linkedlist/LinkedListGuide.md)
+
 - File I/O (files and processing): [fileio/FileIOGuide.md](fileio/FileIOGuide.md)
 
 
