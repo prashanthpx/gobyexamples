@@ -71,6 +71,95 @@ Benefits:
 
 ---
 
+### Flusher vs Buffer: decoupling via implicit interfaces
+
+They’re two different things:
+- p.Flusher (interface) = a contract: “anything with Flush() error”.
+- q.Buffer (concrete type) = one particular implementation that happens to have Flush() error.
+
+Because Go uses implicit interfaces, q.Buffer automatically satisfies p.Flusher (no glue code) as long as its method matches.
+
+Why define Flusher?
+1) Decouple packages (avoid import cycles)
+- Let the consumer package depend only on behavior, not a concrete type.
+
+```go
+// package p
+package p
+
+type Flusher interface{ Flush() error }
+
+func SaveAndFlush(f Flusher) error {
+    // ... do stuff ...
+    return f.Flush()
+}
+```
+
+```go
+// package q (no import of p)
+package q
+
+type Buffer struct{}
+func (Buffer) Flush() error { return nil }
+```
+
+```go
+// package main
+package main
+
+import (
+    p "example.com/your/p"
+    q "example.com/your/q"
+)
+
+func main() {
+    var b q.Buffer
+    _ = p.SaveAndFlush(b) // q.Buffer satisfies p.Flusher implicitly
+}
+```
+
+- p doesn’t import q, and q doesn’t import p → no cycles.
+
+2) Swap implementations freely
+- Any type with Flush() error works: your q.Buffer, bufio.Writer, a mock, etc.
+
+```go
+var f p.Flusher = bufio.NewWriter(os.Stdout) // also satisfies p.Flusher
+```
+
+3) Easier testing
+- Pass a fake that tracks calls or injects errors:
+
+```go
+type fakeFlusher struct{ called bool; err error }
+func (f *fakeFlusher) Flush() error { f.called = true; return f.err }
+```
+
+4) Stable API surface
+- p can evolve independently of any specific implementation in q. Changing q.Buffer internals won’t break p as long as it still has Flush() error.
+
+Method-set nuance (value vs pointer)
+- Your example uses a value receiver:
+
+```go
+func (Buffer) Flush() error { return nil }
+```
+
+- So both q.Buffer and *q.Buffer satisfy p.Flusher.
+- If you wrote `func (*Buffer) Flush() error`, then only *q.Buffer would satisfy:
+
+```go
+var f p.Flusher = &q.Buffer{} // ok if method has pointer receiver
+```
+
+Design guidance
+- Define small interfaces in the package that uses them (the consumer).
+- Prefer behavior-focused names and one- or few-method interfaces (like io.Writer, io.Closer, Flusher).
+- Don’t export “fat” interfaces too early.
+
+In short: Flusher gives you decoupling, swapability, and testability; Buffer is just one implementer.
+
+
 <a id="toc-3-method-sets"></a>
 
 ## 3) Method Sets and Interface Satisfaction (T vs *T)
