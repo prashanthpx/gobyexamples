@@ -13,6 +13,10 @@ Run these examples
 - Read CSV: go run fileio/examples/011_read_csv.go
 - Chunked checksum (64KB): go run fileio/examples/012_chunk_checksum.go
 
+- End-to-end demo: go run fileio/examples/015_end_to_end_demo.go
+
+- End-to-end demo (buffered I/O): go run fileio/examples/016_end_to_end_buffered.go
+
 - BAD: defer Close in loop (leaks fds): go run fileio/examples/013_fd_leak_bad.go
 - GOOD: close per iteration: go run fileio/examples/014_fd_leak_good.go
 
@@ -29,6 +33,7 @@ Run these examples
 7. [Best Practices](#toc-7-best)
 8. [Performance Notes](#toc-8-perf)
 9. [Advanced: Custom SplitFunc and Large Files](#toc-9-advanced)
+10. [End-to-end file demo](#toc-10-demo)
 
 ---
 
@@ -187,6 +192,72 @@ Example to run: fileio/examples/010_write_options.go
 - Custom sentence splitter: implement bufio.SplitFunc to split on punctuation
 - Very large records: prefer bufio.Reader.ReadSlice/ReadString/ReadBytes with delimiter to control memory
 - Memory map (advanced, platform-specific): often unnecessary; benchmark before choosing
+
+
+<a id="toc-10-demo"></a>
+
+## 10) End-to-end file demo
+
+Add this complete example at the end to see open, read, seek, and append in one place.
+
+```go
+package main
+
+import (
+	"fmt"
+	"io"
+	"os"
+)
+
+func main() {
+	path := "demo_file.txt"
+
+	// 1) Open (create if missing) for read+write; truncate to start clean.
+	f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0o644)
+	must(err)
+	defer f.Close()
+
+	// 2) Write some bytes.
+	n, err := f.WriteString("Hello, file!\nThis is a second line.\n")
+	must(err)
+	fmt.Printf("wrote %d bytes\n", n)
+
+	// 3) Read entire file from the beginning.
+	_, err = f.Seek(0, io.SeekStart)
+	must(err)
+	all, err := io.ReadAll(f)
+	must(err)
+	fmt.Printf("full contents:\n%s", all)
+
+	// 4) Seek to an offset and read a fixed number of bytes.
+	// Offset 7 lands on the 'f' in "Hello, file!"
+	_, err = f.Seek(7, io.SeekStart)
+	must(err)
+	buf := make([]byte, 4)
+	_, err = io.ReadFull(f, buf) // read exactly 4 bytes
+	must(err)
+	fmt.Printf("\nbytes at offset 7 (len=4): %q\n", string(buf))
+
+	// 5) Seek to end and append more data.
+	_, err = f.Seek(0, io.SeekEnd)
+	must(err)
+	_, err = f.WriteString("APPENDED\n")
+	must(err)
+
+	// 6) Re-read to confirm final contents.
+	_, err = f.Seek(0, io.SeekStart)
+	must(err)
+	final, err := io.ReadAll(f)
+	must(err)
+	fmt.Printf("\nfinal contents:\n%s", final)
+}
+
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+```
 
 See: fileio/examples/004_scan_sentences.go, 002_read_stream.go
 
